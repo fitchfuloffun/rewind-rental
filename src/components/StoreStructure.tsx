@@ -1,14 +1,23 @@
+import { useLoader } from "@react-three/fiber";
 import { STORE_DIMENSIONS } from "../constants";
+import { TextureLoader } from "three";
+
 
 export function StoreStructure() {
-    const { WIDTH, DEPTH, HEIGHT, HALF_WIDTH, HALF_DEPTH, HALF_HEIGHT } = STORE_DIMENSIONS;
+  const { WIDTH, DEPTH, HEIGHT, HALF_WIDTH, HALF_DEPTH, HALF_HEIGHT } = STORE_DIMENSIONS;
+  const texture = useLoader(TextureLoader, "src/assets/textures/wall.png")
 
-   return (
+  return (
     <group>
       {/* Back wall */}
       <mesh position={[0, HALF_HEIGHT, -HALF_DEPTH]}>
         <planeGeometry args={[WIDTH, HEIGHT]} />
-        <meshStandardMaterial color="#1a4c96" />
+        <meshStandardMaterial color="#1a4c96"/>
+      </mesh>
+
+      <mesh position={[3, 1, 0]}>
+        <boxGeometry />
+        <meshBasicMaterial map={texture} />
       </mesh>
       
       {/* Front wall with entrance */}

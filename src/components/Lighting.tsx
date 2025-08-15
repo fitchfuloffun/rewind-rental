@@ -1,16 +1,37 @@
 import { STORE_DIMENSIONS } from "../constants";
+import { Downlight } from "./Downlight";
+
+// Usage:
+function StoreLighting() {
+  const downlightPositions = [
+    // [0, 0],
+    [-4, -6],
+    [-4, 0],
+    [-4, 6],
+    [4, -6],
+    [4, 0],
+    [4, 6],
+  ]
+
+  return (
+    <group>
+      {downlightPositions.map((position, index) => (
+        <Downlight key={`downlight-${index}`} position={position} intensity={30} color="#33e0ff" />
+      ))}
+    </group>
+  );
+}
+
 
 export function Lighting() {
   const { DEPTH, HEIGHT, HALF_WIDTH, HALF_DEPTH } = STORE_DIMENSIONS
+
+  
   return (
     <>
       {/* Enhanced lighting */}
       <ambientLight intensity={0.8} />
-      <pointLight position={[0, HEIGHT-1, 0]} intensity={30} color="#33e0ff" />
-      <pointLight position={[-4, HEIGHT-1, -2]} intensity={30} color="#33e0ff" />
-      <pointLight position={[4, HEIGHT-1, -2]} intensity={30} color="#33e0ff" />
-      <pointLight position={[-4, HEIGHT-1, 2]} intensity={30} color="#33e0ff" />
-      <pointLight position={[4, HEIGHT-1, 2]} intensity={30} color="#33e0ff" />
+      <StoreLighting />
       
       {/* Store entrance lighting */}
       <pointLight position={[0, 1, HALF_DEPTH+1]} intensity={100} color="#ffcd3c" />
