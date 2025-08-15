@@ -37,12 +37,12 @@ export function StoreStructure() {
           <meshStandardMaterial color="#1a4c96" />
         </mesh>
         {/* Windows on left wall */}
-        <mesh position={[-HALF_WIDTH - 0.01, HEIGHT * 0.333, -DEPTH * 0.167]} rotation={[0, Math.PI / 2, 0]}>
-          <planeGeometry args={[DEPTH * 0.167, HEIGHT * 0.25]} />
+        <mesh position={[-HALF_WIDTH + 0.01, HALF_HEIGHT, -DEPTH * 0.167]} rotation={[0, Math.PI / 2, 0]}>
+          <planeGeometry args={[DEPTH * 0.167, 3]} />
           <meshStandardMaterial color="#87CEEB" transparent opacity={0.7} />
         </mesh>
-        <mesh position={[-HALF_WIDTH - 0.01, HEIGHT * 0.333, DEPTH * 0.167]} rotation={[0, Math.PI / 2, 0]}>
-          <planeGeometry args={[DEPTH * 0.167, HEIGHT * 0.25]} />
+        <mesh position={[-HALF_WIDTH + 0.01, HALF_HEIGHT, DEPTH * 0.167]} rotation={[0, Math.PI / 2, 0]}>
+          <planeGeometry args={[DEPTH * 0.167, 3]} />
           <meshStandardMaterial color="#87CEEB" transparent opacity={0.7} />
         </mesh>
       </group>
@@ -54,20 +54,20 @@ export function StoreStructure() {
           <meshStandardMaterial color="#1a4c96" />
         </mesh>
         {/* Windows on right wall */}
-        <mesh position={[HALF_WIDTH + 0.01, HEIGHT * 0.333, -DEPTH * 0.167]} rotation={[0, -Math.PI / 2, 0]}>
-          <planeGeometry args={[DEPTH * 0.167, HEIGHT * 0.25]} />
+        <mesh position={[HALF_WIDTH - 0.01, HALF_HEIGHT, -DEPTH * 0.167]} rotation={[0, -Math.PI / 2, 0]}>
+          <planeGeometry args={[DEPTH * 0.167, 3]} />
           <meshStandardMaterial color="#87CEEB" transparent opacity={0.7} />
         </mesh>
-        <mesh position={[HALF_WIDTH + 0.01, HEIGHT * 0.333, DEPTH * 0.167]} rotation={[0, -Math.PI / 2, 0]}>
-          <planeGeometry args={[DEPTH * 0.167, HEIGHT * 0.25]} />
+        <mesh position={[HALF_WIDTH - 0.01, HALF_HEIGHT, DEPTH * 0.167]} rotation={[0, -Math.PI / 2, 0]}>
+          <planeGeometry args={[DEPTH * 0.167, 3]} />
           <meshStandardMaterial color="#87CEEB" transparent opacity={0.7} />
         </mesh>
       </group>
       
       {/* Roof */}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, HEIGHT, 0]}>
+      <mesh rotation={[Math.PI / 2, 0, 0]} position={[0, HEIGHT, 0]}>
         <planeGeometry args={[WIDTH, DEPTH]} />
-        <meshStandardMaterial color="#444444" />
+        <meshStandardMaterial color="#2a2a2a" />
       </mesh>
     </group>
   );
