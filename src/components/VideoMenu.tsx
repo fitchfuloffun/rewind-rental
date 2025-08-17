@@ -52,7 +52,7 @@ export function VideoMenu({ movie, onClose }: VideoMenuProps) {
             borderRadius: "8px",
           }}
         >
-          Movie Cover
+          <img src={movie.cover} width="150px" />
         </div>
 
         {/* Movie title */}

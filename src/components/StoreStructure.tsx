@@ -1,101 +1,44 @@
-import { useEffect, useRef } from "react";
-import { Object3D } from "three";
 import { StoreDoor } from "@/components/StoreDoor.tsx";
+import { StoreFloor } from "@/components/StoreFloor.tsx";
+import { StoreWall } from "@/components/StoreWall.tsx";
 import { STORE_DIMENSIONS } from "@/constants";
-import { useCollisionMesh } from "@/hooks/useCollisionMesh.ts";
 
 export function StoreStructure() {
   const { WIDTH, DEPTH, HEIGHT, HALF_WIDTH, HALF_DEPTH, HALF_HEIGHT } =
     STORE_DIMENSIONS;
-  const leftWallId = "left-wall";
-  const leftWallRef = useRef<Object3D | null>(null);
-  const { updateCollisionBox } = useCollisionMesh(leftWallRef, leftWallId);
-
-  // Update collision box when position changes
-  useEffect(() => {
-    updateCollisionBox();
-  }, [updateCollisionBox]);
 
   return (
     <group>
+      {/* StoreFloor */}
+      <StoreFloor />
+
       {/* Back wall */}
-      <mesh position={[0, HALF_HEIGHT, -HALF_DEPTH]}>
-        <planeGeometry args={[WIDTH, HEIGHT]} />
-        <meshStandardMaterial color="#1a4c96" />
-      </mesh>
+      <StoreWall
+        dimensions={[WIDTH, HEIGHT]}
+        position={[0, HALF_HEIGHT, -HALF_DEPTH]}
+      />
 
       {/* Front wall with entrance */}
-      <group position={[0, HALF_HEIGHT, HALF_DEPTH]} rotation={[0, Math.PI, 0]}>
-        {/* Left side of front wall */}
-        <mesh position={[-WIDTH * 0.3125, 0, 0]}>
-          <planeGeometry args={[WIDTH * 0.375, HEIGHT]} />
-          <meshStandardMaterial color="#1a4c96" />
-        </mesh>
-        {/* Right side of front wall */}
-        <mesh position={[WIDTH * 0.3125, 0, 0]}>
-          <planeGeometry args={[WIDTH * 0.375, HEIGHT]} />
-          <meshStandardMaterial color="#1a4c96" />
-        </mesh>
-        {/* Top of entrance */}
-        <mesh position={[0, HEIGHT * 0.333, 0]}>
-          <planeGeometry args={[WIDTH * 0.25, HEIGHT * 0.333]} />
-          <meshStandardMaterial color="#1a4c96" />
-        </mesh>
-      </group>
-
+      <StoreWall
+        dimensions={[WIDTH, HEIGHT]}
+        position={[0, HALF_HEIGHT, HALF_DEPTH]}
+        rotation={[0, Math.PI, 0]}
+      />
       <StoreDoor />
 
       {/* Left wall with windows */}
-      <group ref={leftWallRef}>
-        <mesh
-          position={[-HALF_WIDTH, HALF_HEIGHT, 0]}
-          rotation={[0, Math.PI / 2, 0]}
-        >
-          <planeGeometry args={[DEPTH, HEIGHT]} />
-          <meshStandardMaterial color="#1a4c96" />
-        </mesh>
-        {/* Windows on left wall */}
-        <mesh
-          position={[-HALF_WIDTH + 0.01, HALF_HEIGHT, -DEPTH * 0.167]}
-          rotation={[0, Math.PI / 2, 0]}
-        >
-          <planeGeometry args={[DEPTH * 0.167, 3]} />
-          <meshStandardMaterial color="#87CEEB" transparent opacity={0.7} />
-        </mesh>
-        <mesh
-          position={[-HALF_WIDTH + 0.01, HALF_HEIGHT, DEPTH * 0.167]}
-          rotation={[0, Math.PI / 2, 0]}
-        >
-          <planeGeometry args={[DEPTH * 0.167, 3]} />
-          <meshStandardMaterial color="#87CEEB" transparent opacity={0.7} />
-        </mesh>
-      </group>
+      <StoreWall
+        dimensions={[DEPTH, HEIGHT]}
+        position={[-HALF_WIDTH, HALF_HEIGHT, 0]}
+        rotation={[0, Math.PI / 2, 0]}
+      />
 
       {/* Right wall with windows */}
-      <group>
-        <mesh
-          position={[HALF_WIDTH, HALF_HEIGHT, 0]}
-          rotation={[0, -Math.PI / 2, 0]}
-        >
-          <planeGeometry args={[DEPTH, HEIGHT]} />
-          <meshStandardMaterial color="#1a4c96" />
-        </mesh>
-        {/* Windows on right wall */}
-        <mesh
-          position={[HALF_WIDTH - 0.01, HALF_HEIGHT, -DEPTH * 0.167]}
-          rotation={[0, -Math.PI / 2, 0]}
-        >
-          <planeGeometry args={[DEPTH * 0.167, 3]} />
-          <meshStandardMaterial color="#87CEEB" transparent opacity={0.7} />
-        </mesh>
-        <mesh
-          position={[HALF_WIDTH - 0.01, HALF_HEIGHT, DEPTH * 0.167]}
-          rotation={[0, -Math.PI / 2, 0]}
-        >
-          <planeGeometry args={[DEPTH * 0.167, 3]} />
-          <meshStandardMaterial color="#87CEEB" transparent opacity={0.7} />
-        </mesh>
-      </group>
+      <StoreWall
+        dimensions={[DEPTH, HEIGHT]}
+        position={[HALF_WIDTH, HALF_HEIGHT, 0]}
+        rotation={[0, -Math.PI / 2, 0]}
+      />
 
       {/* Roof */}
       <mesh rotation={[Math.PI / 2, 0, 0]} position={[0, HEIGHT, 0]}>

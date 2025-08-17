@@ -1,6 +1,5 @@
 import { MovieData } from "@/App.tsx";
 import { FirstPersonControls } from "./FirstPersonControls";
-import { Floor } from "./Floor";
 import { Lighting } from "./Lighting";
 import { SimpleShelf } from "./SimpleShelf";
 import { StoreSign } from "./StoreSign";
@@ -37,8 +36,7 @@ export function StoreScene({
 
       <Lighting />
 
-      {/* Floor and structure */}
-      <Floor />
+      {/* Store structure */}
       <StoreStructure />
 
       {/* Simple shelves to represent the store */}

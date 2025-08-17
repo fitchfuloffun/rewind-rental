@@ -33,9 +33,9 @@ export function SimpleShelf({
 
   return (
     <group position={position} rotation={rotation} ref={meshRef}>
-      <group position={[0, HALF_HEIGHT + 0.5, -0.2]}>
+      <group position={[0, HALF_HEIGHT + 0.4, -0.2]}>
         <mesh>
-          <boxGeometry args={[WIDTH, 1, 0.1]} />
+          <boxGeometry args={[WIDTH - 0.1, 1, 0.1]} />
           <meshStandardMaterial color="#1e3c72" />
         </mesh>
         <Text position={[0, 0, 0.06]} fontSize={0.4} maxWidth={WIDTH}>
@@ -49,6 +49,20 @@ export function SimpleShelf({
         </mesh>
         <mesh position={[0, -1.1, -0.3]} rotation={[-0.5, 0, 0]}>
           <boxGeometry args={[WIDTH, 0.25, 1]} />
+          <meshStandardMaterial color={color} />
+        </mesh>
+
+        {/* Ledges */}
+        <mesh position={[0, 0.55, 0.2]}>
+          <boxGeometry args={[WIDTH, 0.15, 0.45]} />
+          <meshStandardMaterial color={color} />
+        </mesh>
+        <mesh position={[0, (0.55 - HALF_HEIGHT) / 2, 0.2]}>
+          <boxGeometry args={[WIDTH, 0.15, 0.45]} />
+          <meshStandardMaterial color={color} />
+        </mesh>
+        <mesh position={[0, -HALF_HEIGHT, 0.2]}>
+          <boxGeometry args={[WIDTH, 0.15, 0.45]} />
           <meshStandardMaterial color={color} />
         </mesh>
         {/*{videos &&*/}
