@@ -1,13 +1,20 @@
-// import { useLoader } from "@react-three/fiber";
+import { useEffect, useRef } from "react";
+import { Object3D } from "three";
 import { StoreDoor } from "@/components/StoreDoor.tsx";
 import { STORE_DIMENSIONS } from "@/constants";
-
-// import { TextureLoader } from "three";
+import { useCollisionMesh } from "@/hooks/useCollisionMesh.ts";
 
 export function StoreStructure() {
   const { WIDTH, DEPTH, HEIGHT, HALF_WIDTH, HALF_DEPTH, HALF_HEIGHT } =
     STORE_DIMENSIONS;
-  // const texture = useLoader(TextureLoader, "src/assets/textures/wall.png")
+  const leftWallId = "left-wall";
+  const leftWallRef = useRef<Object3D | null>(null);
+  const { updateCollisionBox } = useCollisionMesh(leftWallRef, leftWallId);
+
+  // Update collision box when position changes
+  useEffect(() => {
+    updateCollisionBox();
+  }, [updateCollisionBox]);
 
   return (
     <group>
@@ -39,7 +46,7 @@ export function StoreStructure() {
       <StoreDoor />
 
       {/* Left wall with windows */}
-      <group>
+      <group ref={leftWallRef}>
         <mesh
           position={[-HALF_WIDTH, HALF_HEIGHT, 0]}
           rotation={[0, Math.PI / 2, 0]}

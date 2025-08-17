@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import { CubeTextureLoader, Scene } from "three";
-import { CrosshairProvider } from "@/components/CrosshairProvider.tsx";
 import { StoreScene } from "@/components/StoreScene";
 import { VideoMenu } from "@/components/VideoMenu";
+import { CollisionProvider } from "@/providers/CollisionProvider.tsx";
+import { CrosshairProvider } from "@/providers/CrosshairProvider.tsx";
 import { ControlsDisplay } from "./components/ControlsDisplay";
 import { Crosshair } from "./components/Crosshair";
 
@@ -44,12 +45,14 @@ export default function App() {
   return (
     <div style={{ width: "100vw", height: "100vh", background: "#000" }}>
       <Canvas camera={{ position: [0, 2, 5], fov: 75 }} scene={scene}>
-        <CrosshairProvider>
-          <StoreScene
-            onVideoClick={handleVideoClick}
-            disableControls={!!selectedVideo}
-          />
-        </CrosshairProvider>
+        <CollisionProvider>
+          <CrosshairProvider>
+            <StoreScene
+              onVideoClick={handleVideoClick}
+              disableControls={!!selectedVideo}
+            />
+          </CrosshairProvider>
+        </CollisionProvider>
       </Canvas>
       <Crosshair />
 

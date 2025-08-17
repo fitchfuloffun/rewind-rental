@@ -3,7 +3,7 @@ import { useLoader } from "@react-three/fiber";
 import { Color, Mesh, MeshStandardMaterial, TextureLoader } from "three";
 import { MovieData } from "@/App.tsx";
 import { VIDEO_DIMENSIONS } from "@/constants.ts";
-import { useCrosshair } from "./CrosshairProvider";
+import { useCrosshair } from "../providers/CrosshairProvider.tsx";
 
 // Import the hook
 

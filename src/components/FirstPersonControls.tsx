@@ -1,14 +1,20 @@
 import { useEffect, useRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
-import { Vector3 } from "three";
-import { STORE_DIMENSIONS } from "../constants";
+import { Box3, Vector3 } from "three";
+import { useCollision } from "@/providers/CollisionProvider.tsx";
 
-// Combined keyboard and mouse controls
-export function FirstPersonControls({ disabled = false }) {
+// Combined keyboard and mouse controls with collision detection
+export function FirstPersonControls({
+  disabled = false,
+}: {
+  disabled?: boolean;
+}) {
   const { camera, gl } = useThree();
   const keysPressed = useRef<{ [key: string]: boolean }>({});
   const rotation = useRef({ x: 0, y: 0 });
   const isPointerLocked = useRef(false);
+  const playerRadius = 0.5; // Player collision radius
+  const { checkCollisions } = useCollision();
 
   useEffect(() => {
     // Release pointer lock when disabled
@@ -81,6 +87,26 @@ export function FirstPersonControls({ disabled = false }) {
     };
   }, [gl.domElement, disabled]);
 
+  // Check collision with shelves/obstacles
+  const checkCollision = (position: Vector3): boolean => {
+    const playerBox = new Box3(
+      new Vector3(
+        position.x - playerRadius,
+        position.y - 1, // Player height bottom
+        position.z - playerRadius,
+      ),
+      new Vector3(
+        position.x + playerRadius,
+        position.y + 1, // Player height top
+        position.z + playerRadius,
+      ),
+    );
+
+    const collisions = checkCollisions(playerBox);
+
+    return collisions.length > 0;
+  };
+
   useFrame((_state, delta) => {
     if (disabled) return; // Don't process movement if disabled
 
@@ -125,7 +151,8 @@ export function FirstPersonControls({ disabled = false }) {
       testXPos.x += moveVector.x;
       testXPos.y = walkingHeight;
 
-      if (isInsideStore(testXPos)) {
+      // Check collision (includes both walls and shelves)
+      if (!checkCollision(testXPos)) {
         camera.position.x = testXPos.x;
       }
 
@@ -134,23 +161,12 @@ export function FirstPersonControls({ disabled = false }) {
       testZPos.z += moveVector.z;
       testZPos.y = walkingHeight;
 
-      if (isInsideStore(testZPos)) {
+      // Check collision (includes both walls and shelves)
+      if (!checkCollision(testZPos)) {
         camera.position.z = testZPos.z;
       }
     }
   });
-
-  // Collision detection - keep player inside store boundaries
-  const isInsideStore = (position: Vector3) => {
-    const margin = 0.5;
-
-    return (
-      position.x > -STORE_DIMENSIONS.HALF_WIDTH + margin &&
-      position.x < STORE_DIMENSIONS.HALF_WIDTH - margin &&
-      position.z > -STORE_DIMENSIONS.HALF_DEPTH + margin &&
-      position.z < STORE_DIMENSIONS.HALF_DEPTH - margin
-    );
-  };
 
   return null;
 }

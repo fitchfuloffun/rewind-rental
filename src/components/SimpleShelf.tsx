@@ -1,7 +1,10 @@
+import { useEffect, useRef } from "react";
 import { Text } from "@react-three/drei";
+import { Object3D } from "three";
 import { MovieData } from "@/App.tsx";
 import { Video } from "@/components/Video.tsx";
 import { SHELF_DIMENSIONS, VIDEO_DIMENSIONS } from "@/constants.ts";
+import { useCollisionMesh } from "@/hooks/useCollisionMesh.ts";
 
 type SimpleShelfProps = {
   position: [x: number, y: number, z: number];
@@ -19,8 +22,17 @@ export function SimpleShelf({
   videos,
 }: SimpleShelfProps) {
   const { WIDTH, HEIGHT, DEPTH, HALF_HEIGHT, VIDEO_SLOTS } = SHELF_DIMENSIONS;
+  const shelfId = `shelf-${position.join("-")}`;
+  const meshRef = useRef<Object3D | null>(null);
+  const { updateCollisionBox } = useCollisionMesh(meshRef, shelfId);
+
+  // Update collision box when position changes
+  useEffect(() => {
+    updateCollisionBox();
+  }, [position, updateCollisionBox]);
+
   return (
-    <group position={position} rotation={rotation}>
+    <group position={position} rotation={rotation} ref={meshRef}>
       <group position={[0, HALF_HEIGHT + 0.5, -0.2]}>
         <mesh>
           <boxGeometry args={[WIDTH, 1, 0.1]} />
