@@ -1,6 +1,13 @@
-import { createContext, useCallback, useContext, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { Box3 } from "three";
 import { CollisionDebugRenderer } from "@/debug/CollisionDebugRenderer.tsx";
+import { useDebug } from "@/providers/DebugProvider.tsx";
 
 type CollisionContextType = {
   addBoundingBox: (id: string, box: Box3) => void;
@@ -13,13 +20,12 @@ type CollisionContextType = {
 
 const CollisionContext = createContext<CollisionContextType | null>(null);
 
-export function CollisionProvider({
-  children,
-  debugMode = true,
-}: {
-  children: React.ReactNode;
-  debugMode?: boolean;
-}) {
+export function CollisionProvider({ children }: { children: React.ReactNode }) {
+  const { debugMode } = useDebug();
+
+  useEffect(() => {
+    console.log("CollisionProvider", debugMode);
+  }, [debugMode]);
   const [boundingBoxes, setBoundingBoxes] = useState<Map<string, Box3>>(
     new Map(),
   );

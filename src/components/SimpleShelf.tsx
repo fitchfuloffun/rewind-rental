@@ -3,8 +3,10 @@ import { Text } from "@react-three/drei";
 import { Object3D } from "three";
 import { MovieData } from "@/App.tsx";
 import { Video } from "@/components/Video.tsx";
-import { SHELF_DIMENSIONS, VIDEO_DIMENSIONS } from "@/constants.ts";
+import { VideoPlaceholder } from "@/components/VideoPlaceholder.tsx";
+import { SHELF_DIMENSIONS } from "@/constants.ts";
 import { useCollisionMesh } from "@/hooks/useCollisionMesh.ts";
+import { useDebug } from "@/providers/DebugProvider.tsx";
 
 type SimpleShelfProps = {
   position: [x: number, y: number, z: number];
@@ -21,6 +23,7 @@ export function SimpleShelf({
   onVideoClick,
   videos,
 }: SimpleShelfProps) {
+  const { debugMode } = useDebug();
   const { WIDTH, HEIGHT, DEPTH, HALF_HEIGHT, VIDEO_SLOTS } = SHELF_DIMENSIONS;
   const shelfId = `shelf-${position.join("-")}`;
   const meshRef = useRef<Object3D | null>(null);
@@ -65,44 +68,40 @@ export function SimpleShelf({
           <boxGeometry args={[WIDTH, 0.15, 0.45]} />
           <meshStandardMaterial color={color} />
         </mesh>
-        {/*{videos &&*/}
-        {/*  videos.map((video, index) => {*/}
-        {/*    return (*/}
-        {/*      <Video*/}
-        {/*        key={`video-${video.title}`}*/}
-        {/*        position={VIDEO_SLOTS[index]}*/}
-        {/*        movieData={video}*/}
-        {/*        onVideoClick={onVideoClick}*/}
-        {/*      />*/}
-        {/*    );*/}
-        {/*  })}*/}
-        {VIDEO_SLOTS.map((slot, index) => {
-          if (videos && videos[index]) {
-            const video = videos[index];
-
+        {!debugMode &&
+          videos &&
+          videos.map((video, index) => {
             return (
               <Video
                 key={`video-${video.title}`}
-                position={slot}
+                position={VIDEO_SLOTS[index]}
                 movieData={video}
                 onVideoClick={onVideoClick}
               />
             );
-          }
+          })}
+        {debugMode &&
+          VIDEO_SLOTS.map((slot, index) => {
+            if (videos && videos[index]) {
+              const video = videos[index];
 
-          return (
-            <mesh position={slot}>
-              <boxGeometry
-                args={[
-                  VIDEO_DIMENSIONS.WIDTH,
-                  VIDEO_DIMENSIONS.HEIGHT,
-                  VIDEO_DIMENSIONS.DEPTH,
-                ]}
+              return (
+                <Video
+                  key={`video-${video.title}`}
+                  position={slot}
+                  movieData={video}
+                  onVideoClick={onVideoClick}
+                />
+              );
+            }
+
+            return (
+              <VideoPlaceholder
+                key={`video-placeholder-${slot.join("-")}`}
+                position={slot}
               />
-              <meshBasicMaterial color="red" wireframe={true} />
-            </mesh>
-          );
-        })}
+            );
+          })}
       </group>
     </group>
   );
