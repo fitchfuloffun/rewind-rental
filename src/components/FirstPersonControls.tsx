@@ -1,6 +1,5 @@
 import { useEffect, useRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
-import * as THREE from "three";
 import { Vector3 } from "three";
 import { STORE_DIMENSIONS } from "../constants";
 
@@ -8,7 +7,6 @@ import { STORE_DIMENSIONS } from "../constants";
 export function FirstPersonControls({ disabled = false }) {
   const { camera, gl } = useThree();
   const keysPressed = useRef<{ [key: string]: boolean }>({});
-  const mouseMove = useRef({ x: 0, y: 0 });
   const rotation = useRef({ x: 0, y: 0 });
   const isPointerLocked = useRef(false);
 
@@ -20,7 +18,7 @@ export function FirstPersonControls({ disabled = false }) {
       // Re-lock when menu closes (optional - or let user click to re-engage)
       gl.domElement.requestPointerLock();
     }
-  }, [disabled]);
+  }, [disabled, gl.domElement]);
 
   useEffect(() => {
     if (disabled) return; // Don't add listeners if disabled
@@ -37,11 +35,11 @@ export function FirstPersonControls({ disabled = false }) {
       if (!isPointerLocked.current) return;
 
       const sensitivity = 0.002;
-      mouseMove.current.x = event.movementX * sensitivity;
-      mouseMove.current.y = event.movementY * sensitivity;
+      const deltaX = event.movementX * sensitivity;
+      const deltaY = event.movementY * sensitivity;
 
-      rotation.current["y"] -= mouseMove.current.x;
-      rotation.current["x"] -= mouseMove.current.y;
+      rotation.current.y -= deltaX;
+      rotation.current.x -= deltaY;
 
       // Limit vertical rotation
       rotation.current.x = Math.max(
@@ -81,12 +79,14 @@ export function FirstPersonControls({ disabled = false }) {
       );
       gl.domElement.removeEventListener("click", handleClick);
     };
-  }, [gl]);
+  }, [gl.domElement, disabled]);
 
-  useFrame(() => {
+  useFrame((_state, delta) => {
     if (disabled) return; // Don't process movement if disabled
 
-    const speed = 0.1;
+    const isRunning = keysPressed.current["ShiftLeft"];
+    const baseSpeed = 6; // Increased base speed
+    const speed = (isRunning ? baseSpeed * 2 : baseSpeed) * delta;
     const walkingHeight = 3; // Fixed walking height
 
     // Apply mouse rotation
@@ -97,49 +97,45 @@ export function FirstPersonControls({ disabled = false }) {
     // Lock camera to walking height
     camera.position.y = walkingHeight;
 
-    // Calculate forward/right vectors (horizontal movement only)
-    const forward = new THREE.Vector3(0, 0, -1);
-    const right = new THREE.Vector3(1, 0, 0);
+    // Calculate movement vector
+    const moveVector = new Vector3();
 
-    forward.applyQuaternion(camera.quaternion);
-    right.applyQuaternion(camera.quaternion);
+    if (keysPressed.current["KeyW"]) moveVector.z -= 1;
+    if (keysPressed.current["KeyS"]) moveVector.z += 1;
+    if (keysPressed.current["KeyA"]) moveVector.x -= 1;
+    if (keysPressed.current["KeyD"]) moveVector.x += 1;
 
-    // Remove Y component to keep movement horizontal only
-    forward.y = 0;
-    right.y = 0;
-    forward.normalize();
-    right.normalize();
+    // If there's movement, normalize and apply
+    if (moveVector.length() > 0) {
+      moveVector.normalize();
 
-    // Movement with collision detection
-    const currentPos = camera.position.clone();
+      // Apply camera rotation to movement vector
+      moveVector.applyQuaternion(camera.quaternion);
 
-    if (keysPressed.current["KeyW"]) {
-      const newPos = currentPos.clone().add(forward.multiplyScalar(speed));
-      newPos.y = walkingHeight;
-      if (isInsideStore(newPos)) {
-        camera.position.copy(newPos);
+      // Keep movement horizontal
+      moveVector.y = 0;
+      moveVector.normalize();
+
+      // Scale by speed
+      moveVector.multiplyScalar(speed);
+
+      // Test X movement separately for wall sliding
+      const currentPos = camera.position.clone();
+      const testXPos = currentPos.clone();
+      testXPos.x += moveVector.x;
+      testXPos.y = walkingHeight;
+
+      if (isInsideStore(testXPos)) {
+        camera.position.x = testXPos.x;
       }
-    }
 
-    if (keysPressed.current["KeyS"]) {
-      const newPos = currentPos.clone().add(forward.multiplyScalar(-speed));
-      newPos.y = walkingHeight;
-      if (isInsideStore(newPos)) {
-        camera.position.copy(newPos);
-      }
-    }
-    if (keysPressed.current["KeyA"]) {
-      const newPos = currentPos.clone().add(right.multiplyScalar(-speed));
-      newPos.y = walkingHeight;
-      if (isInsideStore(newPos)) {
-        camera.position.copy(newPos);
-      }
-    }
-    if (keysPressed.current["KeyD"]) {
-      const newPos = currentPos.clone().add(right.multiplyScalar(speed));
-      newPos.y = walkingHeight;
-      if (isInsideStore(newPos)) {
-        camera.position.copy(newPos);
+      // Test Z movement separately for wall sliding
+      const testZPos = camera.position.clone();
+      testZPos.z += moveVector.z;
+      testZPos.y = walkingHeight;
+
+      if (isInsideStore(testZPos)) {
+        camera.position.z = testZPos.z;
       }
     }
   });

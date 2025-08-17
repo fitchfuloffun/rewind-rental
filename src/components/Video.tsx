@@ -1,24 +1,31 @@
-import { useEffect, useMemo, useRef, useState } from "react";
-import { useFrame, useThree } from "@react-three/fiber";
-import { Color, Mesh, MeshStandardMaterial, Texture, Vector2 } from "three";
+import { useEffect, useMemo, useRef } from "react";
+import { useLoader } from "@react-three/fiber";
+import { Color, Mesh, MeshStandardMaterial, TextureLoader } from "three";
 import { MovieData } from "@/App.tsx";
+import { VIDEO_DIMENSIONS } from "@/constants.ts";
+import { useCrosshair } from "./CrosshairProvider";
+
+// Import the hook
 
 type VideoProps = {
-  texture: Texture;
   position: [x: number, y: number, z: number];
   movieData: MovieData;
   onVideoClick: (movie: MovieData) => void;
 };
 
 export function Video({
-  texture,
   position = [0, 0, 0],
   movieData,
   onVideoClick,
 }: VideoProps) {
-  const [hovered, setHovered] = useState(false);
+  const { WIDTH, HEIGHT, DEPTH } = VIDEO_DIMENSIONS;
   const meshRef = useRef<Mesh>(null);
-  const { camera, raycaster } = useThree();
+  const texture = useLoader(TextureLoader, movieData.cover);
+  const { hoveredObject, registerObject, unregisterObject } = useCrosshair();
+
+  // Check if this specific video is hovered
+  const hovered = hoveredObject === meshRef.current;
+
   const materials = useMemo(() => {
     const baseMaterial = new MeshStandardMaterial({ color: "#1a1a1a" });
     const coverMaterial = new MeshStandardMaterial({ map: texture });
@@ -33,11 +40,21 @@ export function Video({
     ];
   }, [texture]);
 
+  // Register/unregister this object with the crosshair manager
+  useEffect(() => {
+    if (meshRef.current) {
+      const id = `video-${movieData.id}`;
+      registerObject(meshRef.current, id);
+
+      return () => unregisterObject(id);
+    }
+  }, [registerObject, unregisterObject, movieData.id]);
+
   // Update emissive properties when hover state changes
   useEffect(() => {
     const emissiveColor = new Color("#ffffff");
     const emissiveIntensity = hovered ? 0.3 : 0;
-    const coverEmissiveIntensity = hovered ? 0.05 : 0; // Less intense on cover
+    const coverEmissiveIntensity = hovered ? 0.05 : 0;
 
     materials.forEach((material, index) => {
       material.emissive = emissiveColor;
@@ -47,25 +64,9 @@ export function Video({
     });
   }, [hovered, materials]);
 
-  // Check crosshair intersection every frame
-  useFrame(() => {
-    if (!meshRef.current) return;
-
-    // Raycast from screen center (crosshair position)
-    raycaster.setFromCamera(new Vector2(0, 0), camera);
-
-    const intersects = raycaster.intersectObject(meshRef.current, false);
-    const isCurrentlyHovered = intersects.length > 0;
-
-    if (isCurrentlyHovered !== hovered) {
-      setHovered(isCurrentlyHovered);
-    }
-  });
-
   // Handle click events
   useEffect(() => {
     const handleClick = (event: MouseEvent) => {
-      // Only handle clicks if pointer is locked and this object is hovered
       if (hovered && document.pointerLockElement) {
         event.preventDefault();
         event.stopPropagation();
@@ -73,7 +74,6 @@ export function Video({
       }
     };
 
-    // Add click listener to document when hovered
     if (hovered) {
       document.addEventListener("click", handleClick);
       return () => document.removeEventListener("click", handleClick);
@@ -89,7 +89,7 @@ export function Video({
       position={position}
       scale={[currentScale, currentScale, currentScale]}
     >
-      <boxGeometry args={[1.05, 1.9, 0.26]} />
+      <boxGeometry args={[WIDTH, HEIGHT, DEPTH]} />
     </mesh>
   );
 }
