@@ -1,5 +1,5 @@
-import { Text } from '@react-three/drei';
-import { STORE_DIMENSIONS } from '../constants';
+import { Text } from "@react-three/drei";
+import { STORE_DIMENSIONS } from "../constants";
 
 export function StoreSign() {
   return (
@@ -9,7 +9,7 @@ export function StoreSign() {
         <boxGeometry args={[8, 1.5, 0.1]} />
         <meshStandardMaterial color="#1e3c72" />
       </mesh>
-      
+
       {/* Sign text */}
       <Text
         position={[0, 0, 0.06]}
