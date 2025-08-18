@@ -15,7 +15,7 @@ export type MovieData = {
   id: number;
   title: string;
   description: string;
-  cover: string;
+  cover?: string;
   price: number;
 };
 

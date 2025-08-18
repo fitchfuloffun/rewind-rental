@@ -16,6 +16,13 @@ const apiOptions = {
 };
 
 export const tmdbApi = {
+  getCageMovieCredits: async () => {
+    const response = await fetch(
+      `${BASE_URL}/person/2963/movie_credits`,
+      apiOptions,
+    );
+    return response.json();
+  },
   getPopularMovies: async (queryString: string) => {
     const response = await fetch(
       `${BASE_URL}/movie/popular?${queryString}`,

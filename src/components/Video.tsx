@@ -3,6 +3,7 @@ import { useLoader } from "@react-three/fiber";
 import { Color, Mesh, MeshStandardMaterial, TextureLoader } from "three";
 import { MovieData } from "@/App.tsx";
 import { VIDEO_DIMENSIONS } from "@/constants.ts";
+import { getAssetUrl } from "@/utils/asset.ts";
 import { useCrosshair } from "../providers/CrosshairProvider.tsx";
 
 // Import the hook
@@ -19,7 +20,9 @@ export function Video({
 }: VideoProps) {
   const { WIDTH, HEIGHT, DEPTH } = VIDEO_DIMENSIONS;
   const meshRef = useRef<Mesh>(null);
-  const texture = useLoader(TextureLoader, movieData.cover);
+  const texturePath =
+    movieData.cover ?? getAssetUrl("/assets/textures/videoplaceholder.jpg");
+  const texture = useLoader(TextureLoader, texturePath);
   const { hoveredObject, registerObject, unregisterObject } = useCrosshair();
 
   // Check if this specific video is hovered

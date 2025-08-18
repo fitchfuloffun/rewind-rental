@@ -43,7 +43,7 @@ export function SimpleShelf({
           <boxGeometry args={[WIDTH - 0.1, 1, 0.1]} />
           <meshStandardMaterial color="#1e3c72" />
         </mesh>
-        <Text position={[0, 0, 0.06]} fontSize={0.4} maxWidth={WIDTH}>
+        <Text position={[0, 0, 0.06]} fontSize={0.2} maxWidth={WIDTH}>
           {signText}
         </Text>
       </group>

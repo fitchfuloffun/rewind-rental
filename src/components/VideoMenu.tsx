@@ -52,7 +52,11 @@ export function VideoMenu({ movie, onClose }: VideoMenuProps) {
             borderRadius: "8px",
           }}
         >
-          <img src={movie.cover} width="150px" />
+          {movie.cover ? (
+            <img src={movie.cover} width="150px" />
+          ) : (
+            "Poster not found"
+          )}
         </div>
 
         {/* Movie title */}
