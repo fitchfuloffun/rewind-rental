@@ -6,7 +6,6 @@ import { VIDEO_DIMENSIONS } from "@/constants.ts";
 import { useCrosshair } from "../providers/CrosshairProvider.tsx";
 
 // Import the hook
-
 type VideoProps = {
   position: [x: number, y: number, z: number];
   movieData: MovieData;
@@ -43,7 +42,7 @@ export function Video({
   // Register/unregister this object with the crosshair manager
   useEffect(() => {
     if (meshRef.current) {
-      const id = `video-${movieData.id}`;
+      const id = `video-${movieData.title}`;
       registerObject(meshRef.current, id);
 
       return () => unregisterObject(id);

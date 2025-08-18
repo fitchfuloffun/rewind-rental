@@ -71,7 +71,7 @@ export function VideoMenu({ movie, onClose }: VideoMenuProps) {
           Rental Price: ${movie.price}
         </p>
         <p style={{ margin: "0 0 25px 0", fontSize: "0.9rem", opacity: 0.8 }}>
-          Be Kind, Rewind!
+          {movie.description}
         </p>
 
         {/* Buttons */}

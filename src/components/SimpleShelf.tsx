@@ -14,6 +14,7 @@ type SimpleShelfProps = {
   rotation?: [x: number, y: number, z: number];
   onVideoClick: (movie: MovieData) => void;
   videos?: MovieData[];
+  signText?: string;
 };
 // Simple box component for shelves
 export function SimpleShelf({
@@ -22,6 +23,7 @@ export function SimpleShelf({
   rotation = [0, 0, 0],
   onVideoClick,
   videos,
+  signText = "Sign Text",
 }: SimpleShelfProps) {
   const { debugMode } = useDebug();
   const { WIDTH, HEIGHT, DEPTH, HALF_HEIGHT, VIDEO_SLOTS } = SHELF_DIMENSIONS;
@@ -42,7 +44,7 @@ export function SimpleShelf({
           <meshStandardMaterial color="#1e3c72" />
         </mesh>
         <Text position={[0, 0, 0.06]} fontSize={0.4} maxWidth={WIDTH}>
-          Genre
+          {signText}
         </Text>
       </group>
       <group rotation={[-0.2, 0, 0]}>

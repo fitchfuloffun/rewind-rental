@@ -39,7 +39,7 @@ export function Lighting() {
       {/* Store entrance lighting */}
       <pointLight
         position={[0, 1, HALF_DEPTH + 1]}
-        intensity={100}
+        intensity={10}
         color="#ffcd3c"
       />
 
