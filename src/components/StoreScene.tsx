@@ -17,7 +17,7 @@ const popularMovies = await Promise.all([
   tmdbApi.getPopularMovies(""),
   tmdbApi.getPopularMovies("page=2"),
 ]);
-console.log(popularMovies);
+
 const movies = popularMovies.map((response, responseIndex: number) =>
   response.results.map((movie: TMDBMovieData, movieIndex: number) => ({
     id: `${responseIndex}${movieIndex}`,
@@ -27,8 +27,6 @@ const movies = popularMovies.map((response, responseIndex: number) =>
     price: 9.99,
   })),
 );
-
-console.log(movies);
 
 // Main scene component
 export function StoreScene({
