@@ -1,4 +1,5 @@
 import { MovieData } from "@/App.tsx";
+import { getAssetUrl } from "@/utils/asset.ts";
 import { FirstPersonControls } from "./FirstPersonControls";
 import { Lighting } from "./Lighting";
 import { SimpleShelf } from "./SimpleShelf";
@@ -14,13 +15,13 @@ const movies = [
   {
     id: 1,
     title: "Dungeons & Dragons: Honor Among Thieves",
-    cover: "/assets/textures/video.png",
+    cover: getAssetUrl("/assets/textures/video.png"),
     price: 3.99,
   },
   {
     id: 2,
     title: "Superman",
-    cover: "/assets/textures/superman.png",
+    cover: getAssetUrl("/assets/textures/superman.png"),
     price: 5.99,
   },
 ];

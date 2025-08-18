@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { useLoader } from "@react-three/fiber";
 import { Object3D, RepeatWrapping, TextureLoader } from "three";
 import { useCollisionMesh } from "@/hooks/useCollisionMesh.ts";
+import { getAssetUrl } from "@/utils/asset.ts";
 
 type StoreWallProps = {
   dimensions: [number, number];
@@ -13,7 +14,10 @@ export function StoreWall({
   position,
   rotation = [0, 0, 0],
 }: StoreWallProps) {
-  const texture = useLoader(TextureLoader, "/assets/textures/yellowwall.jpeg");
+  const texture = useLoader(
+    TextureLoader,
+    getAssetUrl("/assets/textures/yellowwall.jpeg"),
+  );
 
   const tileSize = 1; // How big each tile should appear
   const tilesX = dimensions[0] / tileSize;

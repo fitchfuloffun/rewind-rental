@@ -2,11 +2,14 @@
   "name": "rewind-rental",
   "private": true,
   "version": "0.0.0",
+  "homepage": "https://fitchfuloffun.github.io/rewind-rental/",
   "scripts": {
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "predeploy" : "vite build --base=/rewind-rental/",
+    "deploy" : "gh-pages -d dist"
   },
   "dependencies": {
     "@react-three/drei": "^10.6.1",
@@ -29,6 +32,7 @@
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.19",
+    "gh-pages": "^6.3.0",
     "globals": "^16.3.0",
     "prettier": "^3.6.2",
     "typescript": "~5.8.3",

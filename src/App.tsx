@@ -6,6 +6,7 @@ import { VideoMenu } from "@/components/VideoMenu";
 import { CollisionProvider } from "@/providers/CollisionProvider.tsx";
 import { CrosshairProvider } from "@/providers/CrosshairProvider.tsx";
 import { DebugProvider } from "@/providers/DebugProvider.tsx";
+import { getAssetUrl } from "@/utils/asset.ts";
 import { ControlsDisplay } from "./components/ControlsDisplay";
 import { Crosshair } from "./components/Crosshair";
 
@@ -31,12 +32,12 @@ export default function App() {
   const loader = new CubeTextureLoader();
   loader.load(
     [
-      "/assets/textures/skybox/px.png",
-      "/assets/textures/skybox/nx.png",
-      "/assets/textures/skybox/py.png",
-      "/assets/textures/skybox/ny.png",
-      "/assets/textures/skybox/pz.png",
-      "/assets/textures/skybox/nz.png",
+      getAssetUrl("/assets/textures/skybox/px.png"),
+      getAssetUrl("/assets/textures/skybox/nx.png"),
+      getAssetUrl("/assets/textures/skybox/py.png"),
+      getAssetUrl("/assets/textures/skybox/ny.png"),
+      getAssetUrl("/assets/textures/skybox/pz.png"),
+      getAssetUrl("/assets/textures/skybox/nz.png"),
     ],
     (texture) => {
       scene.background = texture;
