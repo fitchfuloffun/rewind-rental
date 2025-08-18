@@ -18,8 +18,8 @@ export const STORE_DIMENSIONS = {
 };
 
 export const VIDEO_DIMENSIONS = {
-  WIDTH: 0.525,
-  HEIGHT: 0.85,
+  WIDTH: 0.52,
+  HEIGHT: 0.65,
   DEPTH: 0.13,
 
   // Calculated values

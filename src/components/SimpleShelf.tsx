@@ -56,16 +56,20 @@ export function SimpleShelf({
         </mesh>
 
         {/* Ledges */}
-        <mesh position={[0, 0.55, 0.2]}>
-          <boxGeometry args={[WIDTH, 0.15, 0.45]} />
+        <mesh position={[0, 0.8, 0.2]}>
+          <boxGeometry args={[WIDTH, 0.1, 0.45]} />
           <meshStandardMaterial color={color} />
         </mesh>
-        <mesh position={[0, (0.55 - HALF_HEIGHT) / 2, 0.2]}>
-          <boxGeometry args={[WIDTH, 0.15, 0.45]} />
+        <mesh position={[0, 0, 0.2]}>
+          <boxGeometry args={[WIDTH, 0.1, 0.45]} />
+          <meshStandardMaterial color={color} />
+        </mesh>
+        <mesh position={[0, -0.75, 0.2]}>
+          <boxGeometry args={[WIDTH, 0.1, 0.45]} />
           <meshStandardMaterial color={color} />
         </mesh>
         <mesh position={[0, -HALF_HEIGHT, 0.2]}>
-          <boxGeometry args={[WIDTH, 0.15, 0.45]} />
+          <boxGeometry args={[WIDTH, 0.1, 0.45]} />
           <meshStandardMaterial color={color} />
         </mesh>
         {!debugMode &&
