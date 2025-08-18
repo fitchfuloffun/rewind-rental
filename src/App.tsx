@@ -3,6 +3,7 @@ import { Canvas } from "@react-three/fiber";
 import { CubeTextureLoader, Scene } from "three";
 import { StoreScene } from "@/components/StoreScene";
 import { VideoMenu } from "@/components/VideoMenu";
+import { STORE_DIMENSIONS } from "@/constants.ts";
 import { CollisionProvider } from "@/providers/CollisionProvider.tsx";
 import { CrosshairProvider } from "@/providers/CrosshairProvider.tsx";
 import { DebugProvider } from "@/providers/DebugProvider.tsx";
@@ -46,7 +47,13 @@ export default function App() {
 
   return (
     <div style={{ width: "100vw", height: "100vh", background: "#000" }}>
-      <Canvas camera={{ position: [0, 2, 5], fov: 75 }} scene={scene}>
+      <Canvas
+        camera={{
+          position: [0, 3, STORE_DIMENSIONS.HALF_DEPTH - 1],
+          fov: 75,
+        }}
+        scene={scene}
+      >
         <DebugProvider>
           <CollisionProvider>
             <CrosshairProvider>
