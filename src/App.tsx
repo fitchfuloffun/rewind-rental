@@ -31,12 +31,12 @@ export default function App() {
   const loader = new CubeTextureLoader();
   loader.load(
     [
-      "src/assets/textures/skybox/px.png",
-      "src/assets/textures/skybox/nx.png",
-      "src/assets/textures/skybox/py.png",
-      "src/assets/textures/skybox/ny.png",
-      "src/assets/textures/skybox/pz.png",
-      "src/assets/textures/skybox/nz.png",
+      "/assets/textures/skybox/px.png",
+      "/assets/textures/skybox/nx.png",
+      "/assets/textures/skybox/py.png",
+      "/assets/textures/skybox/ny.png",
+      "/assets/textures/skybox/pz.png",
+      "/assets/textures/skybox/nz.png",
     ],
     (texture) => {
       scene.background = texture;

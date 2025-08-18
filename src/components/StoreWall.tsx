@@ -13,10 +13,7 @@ export function StoreWall({
   position,
   rotation = [0, 0, 0],
 }: StoreWallProps) {
-  const texture = useLoader(
-    TextureLoader,
-    "src/assets/textures/yellowwall.jpeg",
-  );
+  const texture = useLoader(TextureLoader, "/assets/textures/yellowwall.jpeg");
 
   const tileSize = 1; // How big each tile should appear
   const tilesX = dimensions[0] / tileSize;

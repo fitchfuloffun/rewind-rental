@@ -14,13 +14,13 @@ const movies = [
   {
     id: 1,
     title: "Dungeons & Dragons: Honor Among Thieves",
-    cover: "src/assets/textures/video.png",
+    cover: "/assets/textures/video.png",
     price: 3.99,
   },
   {
     id: 2,
     title: "Superman",
-    cover: "src/assets/textures/superman.png",
+    cover: "/assets/textures/superman.png",
     price: 5.99,
   },
 ];
