@@ -19,6 +19,7 @@ export function StoreFloor() {
     texture.wrapS = RepeatWrapping;
     texture.wrapT = RepeatWrapping;
     texture.repeat.set(tilesX, tilesY); // Different repeats for X and Y
+    texture.needsUpdate = true;
   }, [texture, tilesX, tilesY]);
 
   return (

@@ -27,6 +27,7 @@ export function StoreWall({
     texture.wrapS = RepeatWrapping;
     texture.wrapT = RepeatWrapping;
     texture.repeat.set(tilesX, tilesY); // Different repeats for X and Y
+    texture.needsUpdate = true;
   }, [texture, tilesX, tilesY]);
   const wallId = `wall-${position.join("-")}`;
   const meshRef = useRef<Object3D | null>(null);
