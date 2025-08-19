@@ -1,7 +1,9 @@
 import { StoreDoor } from "@/components/StoreDoor.tsx";
 import { StoreFloor } from "@/components/StoreFloor.tsx";
 import { StoreWall } from "@/components/StoreWall.tsx";
+import { TV } from "@/components/TV.tsx";
 import { STORE_DIMENSIONS } from "@/constants";
+import { getAssetUrl } from "@/utils/asset.ts";
 
 export function StoreStructure() {
   const { WIDTH, DEPTH, HEIGHT, HALF_WIDTH, HALF_DEPTH, HALF_HEIGHT } =
@@ -38,6 +40,16 @@ export function StoreStructure() {
         dimensions={[DEPTH, HEIGHT]}
         position={[HALF_WIDTH, HALF_HEIGHT, 0]}
         rotation={[0, -Math.PI / 2, 0]}
+      />
+
+      <TV
+        position={[-HALF_WIDTH + 1, HEIGHT - 1, -HALF_DEPTH + 1]}
+        rotation={[Math.PI / 4, Math.PI / 4, -Math.PI / 6]}
+        playlist={[
+          getAssetUrl("/assets/textures/piracy.mp4"),
+          getAssetUrl("/assets/textures/classification.mp4"),
+        ]}
+        volume={1}
       />
 
       {/* Roof */}
