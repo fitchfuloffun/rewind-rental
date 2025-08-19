@@ -11,7 +11,7 @@ export function Downlight({
     <group position={[position[0], lightHeight, position[1]]}>
       {/* Physical light fixture */}
       <mesh>
-        <cylinderGeometry args={[0.15, 0.12, 0.1, 8]} />
+        <cylinderGeometry args={[0.15, 0.12, 0.1, 12]} />
         <meshStandardMaterial color="#333333" metalness={0.8} roughness={0.2} />
       </mesh>
 
@@ -23,7 +23,7 @@ export function Downlight({
           emissive="#ffffff"
           emissiveIntensity={0.3}
           transparent
-          opacity={0.9}
+          opacity={0.2}
         />
       </mesh>
 

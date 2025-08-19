@@ -19,7 +19,7 @@ function StoreLighting() {
         <Downlight
           key={`downlight-${index}`}
           position={position}
-          intensity={30}
+          intensity={10}
           color="#33e0ff"
         />
       ))}

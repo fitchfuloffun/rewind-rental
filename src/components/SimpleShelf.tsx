@@ -15,6 +15,7 @@ type SimpleShelfProps = {
   onVideoClick: (movie: MovieData) => void;
   videos?: MovieData[];
   signText?: string;
+  idPrefix?: string;
 };
 // Simple box component for shelves
 export function SimpleShelf({
@@ -24,10 +25,11 @@ export function SimpleShelf({
   onVideoClick,
   videos,
   signText = "Sign Text",
+  idPrefix,
 }: SimpleShelfProps) {
   const { debugMode } = useDebug();
   const { WIDTH, HEIGHT, DEPTH, HALF_HEIGHT, VIDEO_SLOTS } = SHELF_DIMENSIONS;
-  const shelfId = `shelf-${position.join("-")}`;
+  const shelfId = `${idPrefix}shelf-${position.join("-")}`;
   const meshRef = useRef<Object3D | null>(null);
   const { updateCollisionBox } = useCollisionMesh(meshRef, shelfId);
 

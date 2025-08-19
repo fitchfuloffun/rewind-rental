@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import { CubeTextureLoader, Scene } from "three";
 import { StoreScene } from "@/components/StoreScene";
@@ -7,7 +7,9 @@ import { STORE_DIMENSIONS } from "@/constants.ts";
 import { CollisionProvider } from "@/providers/CollisionProvider.tsx";
 import { CrosshairProvider } from "@/providers/CrosshairProvider.tsx";
 import { DebugProvider } from "@/providers/DebugProvider.tsx";
+import { TMDBMovieData, tmdbApi } from "@/services/tmdbApi.ts";
 import { getAssetUrl } from "@/utils/asset.ts";
+import { getImageUrl } from "@/utils/image.ts";
 import { ControlsDisplay } from "./components/ControlsDisplay";
 import { Crosshair } from "./components/Crosshair";
 
@@ -19,6 +21,34 @@ export type MovieData = {
   price: number;
 };
 
+const popular = await Promise.all([
+  tmdbApi.getPopularMovies(""),
+  tmdbApi.getPopularMovies("page=2"),
+]);
+
+const cage = await tmdbApi.getCageMovieCredits();
+
+const cageMovies = cage.cast.map(
+  (movie: TMDBMovieData, movieIndex: number) => ({
+    id: `cage-${movieIndex}`,
+    title: movie.title,
+    description: movie.overview,
+    cover: getImageUrl(movie.poster_path, "poster", "medium"),
+    price: "Priceless",
+  }),
+);
+
+const movies = popular.map((response, responseIndex: number) =>
+  response.results.map((movie: TMDBMovieData, movieIndex: number) => ({
+    id: `${responseIndex}${movieIndex}`,
+    title: movie.title,
+    description: movie.overview,
+    cover: getImageUrl(movie.poster_path, "poster", "medium") ?? "",
+    price: 9.99,
+  })),
+);
+
+movies.push(cageMovies);
 export default function App() {
   const [selectedVideo, setSelectedVideo] = useState<MovieData | null>(null);
 
@@ -61,6 +91,7 @@ export default function App() {
               <StoreScene
                 onVideoClick={handleVideoClick}
                 disableControls={!!selectedVideo}
+                movies={movies}
               />
             </CrosshairProvider>
           </CollisionProvider>

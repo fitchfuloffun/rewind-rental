@@ -1,49 +1,21 @@
 import { MovieData } from "@/App.tsx";
-import { SHELF_DIMENSIONS } from "@/constants.ts";
-import { TMDBMovieData, tmdbApi } from "@/services/tmdbApi.ts";
-import { getImageUrl } from "@/utils/image.ts";
+import { StoreShelves } from "@/components/StoreShelves.tsx";
 import { FirstPersonControls } from "./FirstPersonControls";
 import { Lighting } from "./Lighting";
-import { SimpleShelf } from "./SimpleShelf";
 import { StoreSign } from "./StoreSign";
 import { StoreStructure } from "./StoreStructure";
 
 type StoreSceneProps = {
   onVideoClick: (movie: MovieData) => void;
   disableControls?: boolean;
+  movies: MovieData[][];
 };
-
-const popularMovies = await Promise.all([
-  tmdbApi.getPopularMovies(""),
-  tmdbApi.getPopularMovies("page=2"),
-]);
-
-const cage = await tmdbApi.getCageMovieCredits();
-
-const cageMovies = cage.cast.map(
-  (movie: TMDBMovieData, movieIndex: number) => ({
-    id: `cage-${movieIndex}`,
-    title: movie.title,
-    description: movie.overview,
-    cover: getImageUrl(movie.poster_path, "poster", "medium"),
-    price: "Priceless",
-  }),
-);
-
-const movies = popularMovies.map((response, responseIndex: number) =>
-  response.results.map((movie: TMDBMovieData, movieIndex: number) => ({
-    id: `${responseIndex}${movieIndex}`,
-    title: movie.title,
-    description: movie.overview,
-    cover: getImageUrl(movie.poster_path, "poster", "medium") ?? "",
-    price: 9.99,
-  })),
-);
 
 // Main scene component
 export function StoreScene({
   onVideoClick,
   disableControls = false,
+  movies,
 }: StoreSceneProps) {
   return (
     <>
@@ -51,66 +23,9 @@ export function StoreScene({
 
       <Lighting />
 
+      <StoreShelves onVideoClick={onVideoClick} movies={movies} />
       {/* Store structure */}
       <StoreStructure />
-
-      {/* Simple shelves to represent the store */}
-      <SimpleShelf
-        position={[
-          -SHELF_DIMENSIONS.HALF_WIDTH - 0.05,
-          SHELF_DIMENSIONS.HALF_HEIGHT,
-          7,
-        ]}
-        rotation={[0, 0, 0]}
-        color="#290b44"
-        onVideoClick={onVideoClick}
-        videos={movies[0]}
-        signText="Popular Flicks"
-      />
-      <SimpleShelf
-        position={[
-          SHELF_DIMENSIONS.HALF_WIDTH + 0.05,
-          SHELF_DIMENSIONS.HALF_HEIGHT,
-          7,
-        ]}
-        rotation={[0, 0, 0]}
-        color="#290b44"
-        onVideoClick={onVideoClick}
-        videos={movies[1]}
-        signText="Popular Flicks"
-      />
-      <SimpleShelf
-        position={[-4, 1.5, 2]}
-        rotation={[0, Math.PI / 2, 0]}
-        color="#290b44"
-        onVideoClick={onVideoClick}
-        videos={cageMovies.slice(0, 20)}
-        signText="Cage is all the rage"
-      />
-      <SimpleShelf
-        position={[-4, 1.5, -2]}
-        rotation={[0, Math.PI / 2, 0]}
-        color="#290b44"
-        onVideoClick={onVideoClick}
-        videos={cageMovies.slice(20, 40)}
-        signText="Cage is all the rage"
-      />
-      <SimpleShelf
-        position={[4, 1.5, -2]}
-        rotation={[0, -Math.PI / 2, 0]}
-        color="#290b44"
-        onVideoClick={onVideoClick}
-        videos={cageMovies.slice(40, 60)}
-        signText="Cage is all the rage"
-      />
-      <SimpleShelf
-        position={[4, 1.5, 2]}
-        rotation={[0, -Math.PI / 2, 0]}
-        color="#290b44"
-        onVideoClick={onVideoClick}
-        videos={cageMovies.slice(60, 80)}
-        signText="Cage is all the rage"
-      />
 
       {/* Center display */}
       <StoreSign />
