@@ -24,9 +24,9 @@ export function TV({
   volume = 0.5,
 }: TVProps) {
   const { camera } = useThree();
-  const videoRef = useRef<HTMLVideoElement>();
-  const audioRef = useRef<PositionalAudio>();
-  const screenRef = useRef<Mesh>();
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const audioRef = useRef<PositionalAudio>(null);
+  const screenRef = useRef<Mesh>(null);
   const [hasInteracted, setHasInteracted] = useState(false);
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
 
@@ -101,8 +101,7 @@ export function TV({
       audioRef.current = sound;
 
       const videoTexture = new VideoTexture(video);
-      const screenMaterial =
-        screenRef.current.material as MeshStandardMaterial;
+      const screenMaterial = screenRef.current.material as MeshStandardMaterial;
       screenMaterial.map = videoTexture;
       screenMaterial.emissiveMap = videoTexture;
       screenMaterial.emissive.set(0xffffff);
@@ -196,10 +195,7 @@ export function TV({
       {/* Antenna */}
       <group position={[0.5, 0.8, -0.3]}>
         <mesh rotation={[0, 0, Math.PI / 6]}>
-          <cylinderGeometry
-            position={[-0.3, 0.2, 0]}
-            args={[0.02, 0.02, 0.8]}
-          />
+          <cylinderGeometry args={[0.02, 0.02, 0.8]} />
           <meshStandardMaterial color="#4a4a4a" />
         </mesh>
         <mesh position={[0.3, 0.2, 0]} rotation={[0, 0, -Math.PI / 6]}>
