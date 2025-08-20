@@ -9,6 +9,8 @@ type ShelfGroupProps = {
   movies: MovieData[];
   signText?: string;
 };
+
+const MOVIES_PER_SHELF = 20;
 export function ShelfGroup({
   position,
   rotation = [0, 0, 0],
@@ -16,24 +18,35 @@ export function ShelfGroup({
   movies,
   signText,
 }: ShelfGroupProps) {
+  const shelfCount = Math.ceil(movies.length / MOVIES_PER_SHELF);
+  let shelves = [];
+
+  for (let i = 0; i < shelfCount; i++) {
+    const start = i * MOVIES_PER_SHELF;
+    const end = start + MOVIES_PER_SHELF;
+    const shelfMovies = movies.slice(start, end);
+    const shelfPosition: [number, number, number] = [
+      SHELF_DIMENSIONS.WIDTH * i,
+      0,
+      0,
+    ];
+
+    shelves.push(
+      <SimpleShelf
+        key={i}
+        position={shelfPosition}
+        color="#290b44"
+        onVideoClick={onVideoClick}
+        videos={shelfMovies}
+        signText={signText}
+        idPrefix={`${position.join("-")}-${i}-`}
+      />,
+    );
+  }
+
   return (
     <group position={position} rotation={rotation}>
-      <SimpleShelf
-        position={[-SHELF_DIMENSIONS.HALF_WIDTH, 0, 0]}
-        color="#290b44"
-        onVideoClick={onVideoClick}
-        videos={movies.slice(0, 20)}
-        signText={signText}
-        idPrefix={`${position.join("-")}-`}
-      />
-      <SimpleShelf
-        position={[SHELF_DIMENSIONS.HALF_WIDTH, 0, 0]}
-        color="#290b44"
-        onVideoClick={onVideoClick}
-        videos={movies.slice(20, 40)}
-        signText={signText}
-        idPrefix={`${position.join("-")}-`}
-      />
+      {shelves}
     </group>
   );
 }

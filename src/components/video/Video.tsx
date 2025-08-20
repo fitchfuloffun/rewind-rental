@@ -21,7 +21,9 @@ export function Video({
   const { WIDTH, HEIGHT, DEPTH } = VIDEO_DIMENSIONS;
   const meshRef = useRef<Mesh>(null);
   const texturePath =
-    movieData.cover ?? getAssetUrl("/assets/textures/videoplaceholder.jpg");
+    movieData.cover && movieData.cover != ""
+      ? movieData.cover
+      : getAssetUrl("/assets/textures/videoplaceholder.jpg");
   const texture = useLoader(TextureLoader, texturePath);
   const { hoveredObject, registerObject, unregisterObject } = useCrosshair();
 

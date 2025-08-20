@@ -43,6 +43,15 @@ export function StoreShelves({
         movies={movies[3]}
         signText="Amy's Picks"
       />
+
+      {/* Trending */}
+      <ShelfGroup
+        position={[-STORE_DIMENSIONS.HALF_WIDTH + 0.5, 1.5, 0]}
+        rotation={[0, Math.PI / 2, 0]}
+        onVideoClick={onVideoClick}
+        movies={movies[4]}
+        signText="Trending"
+      />
     </>
   );
 }

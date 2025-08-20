@@ -29,6 +29,11 @@ const popular = await Promise.all([
 const cage = await tmdbApi.getCageMovieCredits();
 
 const twilight = await tmdbApi.getMoviesByCollection(33514);
+const trending = await Promise.all([
+  tmdbApi.getTrendingMovies("page=1"),
+  tmdbApi.getTrendingMovies("page=2"),
+  tmdbApi.getTrendingMovies("page=3"),
+]);
 
 const cageMovies = cage.cast.map(
   (movie: TMDBMovieData, movieIndex: number) => ({
@@ -50,6 +55,16 @@ const twilightMovies = twilight.parts.map(
   }),
 );
 
+const trendingMovies = trending.map((response) =>
+  response.results.map((movie: TMDBMovieData, movieIndex: number) => ({
+    id: `trending-${movieIndex}`,
+    title: movie.title,
+    description: movie.overview,
+    cover: getImageUrl(movie.poster_path, "poster", "medium") ?? "",
+    price: 9.99,
+  })),
+);
+
 const movies = popular.map((response, responseIndex: number) =>
   response.results.map((movie: TMDBMovieData, movieIndex: number) => ({
     id: `${responseIndex}${movieIndex}`,
@@ -62,6 +77,7 @@ const movies = popular.map((response, responseIndex: number) =>
 
 movies.push(cageMovies);
 movies.push(twilightMovies);
+movies.push(trendingMovies.flat());
 export default function App() {
   const [selectedVideo, setSelectedVideo] = useState<MovieData | null>(null);
 

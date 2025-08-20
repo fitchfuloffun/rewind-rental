@@ -30,6 +30,13 @@ export const tmdbApi = {
     );
     return response.json();
   },
+  getTrendingMovies: async (queryString: string) => {
+    const response = await fetch(
+      `${BASE_URL}/trending/movie/day?${queryString}`,
+      apiOptions,
+    );
+    return response.json();
+  },
   getMoviesByCollection: async (collectionId: number) => {
     const response = await fetch(
       `${BASE_URL}/collection/${collectionId}`,

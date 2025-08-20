@@ -46,6 +46,9 @@ export const SHELF_DIMENSIONS = {
   get HALF_HEIGHT() {
     return this.HEIGHT / 2;
   },
+  get HALF_DEPTH() {
+    return this.DEPTH / 2;
+  },
 
   get VIDEO_SLOTS() {
     const horizontalSlots = Math.floor(
