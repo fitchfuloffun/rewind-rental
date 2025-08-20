@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useLoader } from "@react-three/fiber";
 import { RepeatWrapping, TextureLoader } from "three";
 import { getAssetUrl } from "@/utils/asset.ts";
-import { STORE_DIMENSIONS } from "../constants";
+import { STORE_DIMENSIONS } from "../../../constants.ts";
 
 // StoreFloor component
 export function StoreFloor() {

@@ -1,4 +1,4 @@
-import { STORE_DIMENSIONS } from "@/constants";
+import { STORE_DIMENSIONS } from "@/constants.ts";
 
 export function StoreDoor() {
   const { HALF_DEPTH, HEIGHT, WIDTH } = STORE_DIMENSIONS;

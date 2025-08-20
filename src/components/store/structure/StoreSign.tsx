@@ -1,5 +1,5 @@
 import { Text } from "@react-three/drei";
-import { STORE_DIMENSIONS } from "../constants";
+import { STORE_DIMENSIONS } from "../../../constants.ts";
 
 export function StoreSign() {
   return (

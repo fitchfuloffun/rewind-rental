@@ -1,5 +1,5 @@
 import { MovieData } from "@/App.tsx";
-import { ShelfGroup } from "@/components/ShelfGroup.tsx";
+import { ShelfGroup } from "@/components/store/shelving/ShelfGroup.tsx";
 import { STORE_DIMENSIONS } from "@/constants.ts";
 
 export function StoreShelves({

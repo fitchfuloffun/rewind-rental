@@ -1,5 +1,5 @@
 import { MovieData } from "@/App.tsx";
-import { SimpleShelf } from "@/components/SimpleShelf.tsx";
+import { SimpleShelf } from "@/components/store/shelving/SimpleShelf.tsx";
 import { SHELF_DIMENSIONS } from "@/constants.ts";
 
 type ShelfGroupProps = {

@@ -1,8 +1,8 @@
-import { StoreDoor } from "@/components/StoreDoor.tsx";
-import { StoreFloor } from "@/components/StoreFloor.tsx";
-import { StoreWall } from "@/components/StoreWall.tsx";
 import { TV } from "@/components/TV.tsx";
-import { STORE_DIMENSIONS } from "@/constants";
+import { StoreDoor } from "@/components/store/structure/StoreDoor.tsx";
+import { StoreFloor } from "@/components/store/structure/StoreFloor.tsx";
+import { StoreWall } from "@/components/store/structure/StoreWall.tsx";
+import { STORE_DIMENSIONS } from "@/constants.ts";
 import { getAssetUrl } from "@/utils/asset.ts";
 
 export function StoreStructure() {

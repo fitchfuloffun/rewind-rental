@@ -1,5 +1,5 @@
-import { STORE_DIMENSIONS } from "../constants";
-import { Downlight } from "./Downlight";
+import { STORE_DIMENSIONS } from "../../../constants.ts";
+import { Downlight } from "./Downlight.tsx";
 
 // Usage:
 function StoreLighting() {

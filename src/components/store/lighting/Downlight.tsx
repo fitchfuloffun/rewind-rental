@@ -1,4 +1,4 @@
-import { STORE_DIMENSIONS } from "../constants";
+import { STORE_DIMENSIONS } from "../../../constants.ts";
 
 type DownlightProps = {
   position?: [number, number];

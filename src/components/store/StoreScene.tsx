@@ -1,9 +1,9 @@
 import { MovieData } from "@/App.tsx";
-import { StoreShelves } from "@/components/StoreShelves.tsx";
-import { FirstPersonControls } from "./FirstPersonControls";
-import { Lighting } from "./Lighting";
-import { StoreSign } from "./StoreSign";
-import { StoreStructure } from "./StoreStructure";
+import { StoreShelves } from "@/components/store/shelving/StoreShelves.tsx";
+import { FirstPersonControls } from "../controls/FirstPersonControls.tsx";
+import { Lighting } from "./lighting/Lighting.tsx";
+import { StoreSign } from "./structure/StoreSign.tsx";
+import { StoreStructure } from "./structure/StoreStructure.tsx";
 
 type StoreSceneProps = {
   onVideoClick: (movie: MovieData) => void;
