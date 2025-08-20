@@ -30,4 +30,11 @@ export const tmdbApi = {
     );
     return response.json();
   },
+  getMoviesByCollection: async (collectionId: number) => {
+    const response = await fetch(
+      `${BASE_URL}/collection/${collectionId}`,
+      apiOptions,
+    );
+    return response.json();
+  },
 };

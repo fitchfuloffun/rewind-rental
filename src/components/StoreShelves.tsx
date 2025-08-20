@@ -1,5 +1,6 @@
 import { MovieData } from "@/App.tsx";
 import { ShelfGroup } from "@/components/ShelfGroup.tsx";
+import { STORE_DIMENSIONS } from "@/constants.ts";
 
 export function StoreShelves({
   onVideoClick,
@@ -32,6 +33,15 @@ export function StoreShelves({
         onVideoClick={onVideoClick}
         movies={movies[2].slice(40, 80)}
         signText="Cage is all the rage"
+      />
+
+      {/* Amy's Picks*/}
+      <ShelfGroup
+        position={[STORE_DIMENSIONS.HALF_WIDTH - 0.5, 1.5, 0]}
+        rotation={[0, -Math.PI / 2, 0]}
+        onVideoClick={onVideoClick}
+        movies={movies[3]}
+        signText="Amy's Picks"
       />
     </>
   );

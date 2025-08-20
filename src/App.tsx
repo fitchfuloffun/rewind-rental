@@ -28,6 +28,8 @@ const popular = await Promise.all([
 
 const cage = await tmdbApi.getCageMovieCredits();
 
+const twilight = await tmdbApi.getMoviesByCollection(33514);
+
 const cageMovies = cage.cast.map(
   (movie: TMDBMovieData, movieIndex: number) => ({
     id: `cage-${movieIndex}`,
@@ -35,6 +37,16 @@ const cageMovies = cage.cast.map(
     description: movie.overview,
     cover: getImageUrl(movie.poster_path, "poster", "medium"),
     price: "Priceless",
+  }),
+);
+
+const twilightMovies = twilight.parts.map(
+  (movie: TMDBMovieData, movieIndex: number) => ({
+    id: `cage-${movieIndex}`,
+    title: movie.title,
+    description: movie.overview,
+    cover: getImageUrl(movie.poster_path, "poster", "medium"),
+    price: "Where you been, loca?",
   }),
 );
 
@@ -49,6 +61,7 @@ const movies = popular.map((response, responseIndex: number) =>
 );
 
 movies.push(cageMovies);
+movies.push(twilightMovies);
 export default function App() {
   const [selectedVideo, setSelectedVideo] = useState<MovieData | null>(null);
 
