@@ -50,6 +50,7 @@ export function StoreStructure() {
           getAssetUrl("/assets/textures/classification.mp4"),
         ]}
         volume={1}
+        defaultMuted={true}
       />
 
       {/* Roof */}

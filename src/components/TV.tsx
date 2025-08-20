@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useTexture } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
 import {
   AudioListener,
@@ -9,12 +10,14 @@ import {
   PositionalAudio,
   VideoTexture,
 } from "three";
+import { getAssetUrl } from "@/utils/asset";
 
 type TVProps = {
   position?: [number, number, number];
   rotation?: [number, number, number];
   playlist?: string[];
   volume?: number;
+  defaultMuted?: boolean;
 };
 
 export function TV({
@@ -22,6 +25,7 @@ export function TV({
   rotation = [0, 0, 0],
   playlist = [],
   volume = 0.5,
+  defaultMuted,
 }: TVProps) {
   const { camera } = useThree();
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -29,6 +33,8 @@ export function TV({
   const screenRef = useRef<Mesh>(null);
   const [hasInteracted, setHasInteracted] = useState(false);
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
+  const [isMuted, setIsMuted] = useState(defaultMuted ?? false);
+  const muteTexture = useTexture(getAssetUrl("/assets/textures/mute.png"));
 
   // Create curved screen geometry with proper scaling
   const curvedScreen = useMemo(() => {
@@ -79,15 +85,15 @@ export function TV({
     videoRef.current = video;
     video.playsInline = true;
     video.crossOrigin = "anonymous";
-    video.muted = true;
+    video.muted = isMuted; // Set initial mute state
     video.src = playlist[currentVideoIndex];
 
-    // Create listener outside the event handler
     const listener = new AudioListener();
     camera.add(listener);
 
-    // Wait for video metadata to load before creating texture
     video.addEventListener("loadedmetadata", () => {
+      if (!screenRef.current) return;
+
       const videoTexture = new VideoTexture(video);
       videoTexture.wrapS = videoTexture.wrapT = 1000;
       videoTexture.needsUpdate = true;
@@ -105,7 +111,7 @@ export function TV({
       sound.setRolloffFactor(2);
       sound.setDistanceModel("linear");
       sound.setDirectionalCone(90, 180, 0.1);
-      sound.setVolume(volume);
+      sound.setVolume(isMuted ? 0 : volume); // Set initial volume based on mute state
 
       screenRef.current.add(sound);
       audioRef.current = sound;
@@ -113,8 +119,8 @@ export function TV({
       video
         .play()
         .then(() => {
-          video.muted = false;
-          sound.setVolume(volume);
+          video.muted = isMuted;
+          sound.setVolume(isMuted ? 0 : volume);
         })
         .catch(console.warn);
     });
@@ -191,6 +197,17 @@ export function TV({
           <meshStandardMaterial color="#4a4a4a" />
         </mesh>
       </group>
+
+      {isMuted && (
+        <mesh position={[0.5, -0.3, 0.79]} scale={[0.2, 0.2, 1]}>
+          <planeGeometry />
+          <meshBasicMaterial
+            transparent={true}
+            map={muteTexture}
+            color="#ffffff"
+          />
+        </mesh>
+      )}
     </group>
   );
 }
