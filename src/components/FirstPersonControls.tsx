@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { Box3, Vector3 } from "three";
-import { useCollision } from "@/providers/CollisionProvider.tsx";
+import { useCollision } from "@/hooks/useCollision.ts";
 
 // Combined keyboard and mouse controls with collision detection
 export function FirstPersonControls({

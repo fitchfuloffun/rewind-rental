@@ -1,18 +1,8 @@
-import { createContext, useCallback, useContext, useState } from "react";
+import { useCallback, useState } from "react";
 import { Box3 } from "three";
+import { CollisionContext as CollisionContext1 } from "@/contexts/CollisionContext.ts";
 import { CollisionDebugRenderer } from "@/debug/CollisionDebugRenderer.tsx";
-import { useDebug } from "@/providers/DebugProvider.tsx";
-
-type CollisionContextType = {
-  addBoundingBox: (id: string, box: Box3) => void;
-  removeBoundingBox: (id: string) => void;
-  updateBoundingBox: (id: string, box: Box3) => void;
-  checkCollisions: (testBox: Box3) => { id: any; box: any }[];
-  getAllBoundingBoxes: () => void;
-  boundingBoxes: Map<string, Box3>;
-};
-
-const CollisionContext = createContext<CollisionContextType | null>(null);
+import { useDebug } from "@/hooks/useDebug.ts";
 
 export function CollisionProvider({ children }: { children: React.ReactNode }) {
   const { debugMode } = useDebug();
@@ -60,7 +50,7 @@ export function CollisionProvider({ children }: { children: React.ReactNode }) {
   }, [boundingBoxes]);
 
   return (
-    <CollisionContext.Provider
+    <CollisionContext1
       value={{
         addBoundingBox,
         removeBoundingBox,
@@ -72,15 +62,6 @@ export function CollisionProvider({ children }: { children: React.ReactNode }) {
     >
       {children}
       {debugMode && <CollisionDebugRenderer />}
-    </CollisionContext.Provider>
+    </CollisionContext1>
   );
-}
-
-export function useCollision() {
-  const context = useContext(CollisionContext);
-
-  if (!context) {
-    throw new Error("useCollision must be used within a CollisionProvider");
-  }
-  return context;
 }

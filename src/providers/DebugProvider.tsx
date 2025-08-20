@@ -1,11 +1,5 @@
-import { createContext, useContext, useEffect, useState } from "react";
-
-type DebugContextType = {
-  debugMode: boolean;
-  setDebugMode: (debugMode: boolean) => void;
-};
-// Debug Context
-const DebugContext = createContext<DebugContextType | null>(null);
+import { useEffect, useState } from "react";
+import { DebugContext as DebugContext1 } from "@/contexts/DebugContext.ts";
 
 export function DebugProvider({ children }: { children: React.ReactNode }) {
   const [debugMode, setDebugMode] = useState(false);
@@ -20,19 +14,11 @@ export function DebugProvider({ children }: { children: React.ReactNode }) {
 
     window.addEventListener("keydown", handleKeyPress);
     return () => window.removeEventListener("keydown", handleKeyPress);
-  }, []);
+  }, [debugMode]);
 
   return (
-    <DebugContext.Provider value={{ debugMode, setDebugMode }}>
+    <DebugContext1 value={{ debugMode, setDebugMode }}>
       {children}
-    </DebugContext.Provider>
+    </DebugContext1>
   );
-}
-
-export function useDebug() {
-  const context = useContext(DebugContext);
-  if (!context) {
-    throw new Error("useDebug must be used within a DebugProvider");
-  }
-  return context;
 }

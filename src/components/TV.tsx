@@ -140,7 +140,7 @@ export function TV({
         }
       };
     }
-  }, [playlist, currentVideoIndex, hasInteracted, volume]);
+  }, [playlist, currentVideoIndex, hasInteracted, volume, camera]);
 
   useEffect(() => {
     const handleInteraction = () => {

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import { CubeTextureLoader, Scene } from "three";
 import { StoreScene } from "@/components/StoreScene";

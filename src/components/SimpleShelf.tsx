@@ -6,7 +6,7 @@ import { Video } from "@/components/Video.tsx";
 import { VideoPlaceholder } from "@/components/VideoPlaceholder.tsx";
 import { SHELF_DIMENSIONS } from "@/constants.ts";
 import { useCollisionMesh } from "@/hooks/useCollisionMesh.ts";
-import { useDebug } from "@/providers/DebugProvider.tsx";
+import { useDebug } from "@/hooks/useDebug.ts";
 
 type SimpleShelfProps = {
   position: [x: number, y: number, z: number];

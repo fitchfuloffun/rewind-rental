@@ -1,6 +1,6 @@
 import { RefObject, useCallback, useEffect, useRef } from "react";
 import { Box3, Object3D } from "three";
-import { useCollision } from "@/providers/CollisionProvider.tsx";
+import { useCollision } from "@/hooks/useCollision.ts";
 
 export function useCollisionMesh(
   meshRef: RefObject<Object3D | null>,
@@ -20,14 +20,14 @@ export function useCollisionMesh(
         removeBoundingBox(id);
       };
     }
-  }, [id, addBoundingBox, removeBoundingBox]);
+  }, [id, addBoundingBox, removeBoundingBox, meshRef]);
 
   const updateCollisionBox = useCallback(() => {
     if (meshRef.current && id && boundingBoxRef.current) {
       boundingBoxRef.current.setFromObject(meshRef.current);
       updateBoundingBox(id, boundingBoxRef.current);
     }
-  }, [id, updateBoundingBox]);
+  }, [id, updateBoundingBox, meshRef]);
 
   return { updateCollisionBox };
 }

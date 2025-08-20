@@ -1,14 +1,19 @@
 import { useEffect, useRef } from "react";
 import { useThree } from "@react-three/fiber";
-import { Box3Helper } from "three";
-import { useCollision } from "@/providers/CollisionProvider.tsx";
-import { useDebug } from "@/providers/DebugProvider.tsx";
+import { Box3, Box3Helper } from "three";
+import { useCollision } from "@/hooks/useCollision.ts";
+import { useDebug } from "@/hooks/useDebug.ts";
 
+type CollisionDebugRendererProps = {
+  defaultColor?: number; // Default color for non-colliding boxes
+  collisionColor?: number; // Color for colliding boxes
+  playerBox?: Box3 | null;
+};
 export function CollisionDebugRenderer({
   defaultColor = 0xff0000,
   collisionColor = 0x0000ff,
   playerBox = null,
-}) {
+}: CollisionDebugRendererProps) {
   const { debugMode } = useDebug();
   const { boundingBoxes, checkCollisions } = useCollision();
   const { scene } = useThree();
@@ -62,18 +67,29 @@ export function CollisionDebugRenderer({
         helper.updateMatrixWorld();
       }
     }
-  }, [debugMode, boundingBoxes, scene, playerBox, checkCollisions]);
+  }, [
+    debugMode,
+    boundingBoxes,
+    scene,
+    playerBox,
+    checkCollisions,
+    collisionColor,
+    defaultColor,
+  ]);
 
   // Cleanup on unmount
   useEffect(() => {
+    // Capture the ref value when the effect runs
+    const helperMap = helpersRef.current;
+
     return () => {
       console.log("Component unmounting - cleaning up all helpers");
-      const helpers = helpersRef.current;
-      for (const [, helper] of helpers) {
+      // Use the captured value instead of accessing .current in cleanup
+      for (const [, helper] of helperMap) {
         scene.remove(helper);
         if (helper.dispose) helper.dispose();
       }
-      helpers.clear();
+      helperMap.clear();
     };
   }, [scene]);
 

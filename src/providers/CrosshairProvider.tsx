@@ -1,15 +1,8 @@
-import { createContext, useContext, useRef, useState } from "react";
+import * as React from "react";
+import { useRef, useState } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { Object3D, Vector2 } from "three";
-
-// Context for crosshair state
-interface CrosshairContextType {
-  hoveredObject: Object3D | null;
-  registerObject: (obj: Object3D, id: string) => void;
-  unregisterObject: (id: string) => void;
-}
-
-const CrosshairContext = createContext<CrosshairContextType | null>(null);
+import { CrosshairContext as CrosshairContext1 } from "@/contexts/CrosshairContext.ts";
 
 export function CrosshairProvider({ children }: { children: React.ReactNode }) {
   const { camera, raycaster } = useThree();
@@ -42,18 +35,10 @@ export function CrosshairProvider({ children }: { children: React.ReactNode }) {
   });
 
   return (
-    <CrosshairContext.Provider
+    <CrosshairContext1
       value={{ hoveredObject, registerObject, unregisterObject }}
     >
       {children}
-    </CrosshairContext.Provider>
+    </CrosshairContext1>
   );
-}
-
-export function useCrosshair() {
-  const context = useContext(CrosshairContext);
-  if (!context) {
-    throw new Error("useCrosshair must be used within CrosshairProvider");
-  }
-  return context;
 }

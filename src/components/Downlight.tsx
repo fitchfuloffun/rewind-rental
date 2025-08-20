@@ -1,10 +1,16 @@
 import { STORE_DIMENSIONS } from "../constants";
 
+type DownlightProps = {
+  position?: [number, number];
+  intensity?: number;
+  color?: string;
+};
+
 export function Downlight({
   position = [0, 0],
   intensity = 1.5,
   color = "white",
-}) {
+}: DownlightProps) {
   const lightHeight = STORE_DIMENSIONS.HEIGHT - 0.2; // Just below ceiling
 
   return (

@@ -3,8 +3,8 @@ import { useLoader } from "@react-three/fiber";
 import { Color, Mesh, MeshStandardMaterial, TextureLoader } from "three";
 import { MovieData } from "@/App.tsx";
 import { VIDEO_DIMENSIONS } from "@/constants.ts";
+import { useCrosshair } from "@/hooks/useCrosshair.ts";
 import { getAssetUrl } from "@/utils/asset.ts";
-import { useCrosshair } from "../providers/CrosshairProvider.tsx";
 
 // Import the hook
 type VideoProps = {
@@ -50,7 +50,7 @@ export function Video({
 
       return () => unregisterObject(id);
     }
-  }, [registerObject, unregisterObject, movieData.id]);
+  }, [registerObject, unregisterObject, movieData.id, movieData.title]);
 
   // Update emissive properties when hover state changes
   useEffect(() => {
