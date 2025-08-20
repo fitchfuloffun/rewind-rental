@@ -56,9 +56,7 @@ export function TV({
 
   useEffect(() => {
     const handleInteraction = () => {
-      if (!hasInteracted && videoRef.current) {
-        videoRef.current.muted = false;
-        videoRef.current.volume = volume;
+      if (!hasInteracted) {
         setHasInteracted(true);
         document.removeEventListener("click", handleInteraction);
         document.removeEventListener("keydown", handleInteraction);
@@ -72,95 +70,85 @@ export function TV({
       document.removeEventListener("click", handleInteraction);
       document.removeEventListener("keydown", handleInteraction);
     };
-  }, [hasInteracted, volume]);
+  }, [hasInteracted]);
 
   useEffect(() => {
-    if (playlist.length > 0 && screenRef.current) {
-      const video = document.createElement("video");
-      video.src = playlist[currentVideoIndex];
-      video.loop = false;
-      video.muted = true;
-      video.playsInline = true;
-      video.crossOrigin = "anonymous";
+    if (!playlist.length || !screenRef.current || !hasInteracted) return;
 
-      video.load();
+    const video = document.createElement("video");
+    videoRef.current = video;
+    video.playsInline = true;
+    video.crossOrigin = "anonymous";
+    video.muted = true;
+    video.src = playlist[currentVideoIndex];
 
-      // Create positional audio
-      const listener = new AudioListener();
-      camera.add(listener);
+    // Create listener outside the event handler
+    const listener = new AudioListener();
+    camera.add(listener);
 
-      const sound = new PositionalAudio(listener);
-      sound.setMediaElementSource(video);
-      sound.setRefDistance(5); // Distance at which the volume starts falling off
-      sound.setRolloffFactor(2); // How quickly the sound fades with distance
-      sound.setDistanceModel("linear"); // Linear falloff model
-      sound.setDirectionalCone(90, 180, 0.1); // Directional cone parameters
-
-      // Add sound to the TV mesh
-      screenRef.current.add(sound);
-      audioRef.current = sound;
-
+    // Wait for video metadata to load before creating texture
+    video.addEventListener("loadedmetadata", () => {
       const videoTexture = new VideoTexture(video);
+      videoTexture.wrapS = videoTexture.wrapT = 1000;
+      videoTexture.needsUpdate = true;
+
       const screenMaterial = screenRef.current.material as MeshStandardMaterial;
       screenMaterial.map = videoTexture;
       screenMaterial.emissiveMap = videoTexture;
       screenMaterial.emissive.set(0xffffff);
       screenMaterial.emissiveIntensity = 0.4;
+      screenMaterial.needsUpdate = true;
 
-      // Adjust texture wrapping for curved surface
-      videoTexture.wrapS = videoTexture.wrapT = 1000;
+      const sound = new PositionalAudio(listener);
+      sound.setMediaElementSource(video);
+      sound.setRefDistance(5);
+      sound.setRolloffFactor(2);
+      sound.setDistanceModel("linear");
+      sound.setDirectionalCone(90, 180, 0.1);
+      sound.setVolume(volume);
 
-      video.addEventListener("ended", () => {
-        setCurrentVideoIndex((prev) => (prev + 1) % playlist.length);
-      });
+      screenRef.current.add(sound);
+      audioRef.current = sound;
 
-      const playVideo = async () => {
-        try {
-          await video.play();
-          videoRef.current = video;
-          if (hasInteracted) {
-            video.muted = false;
-            if (audioRef.current) {
-              audioRef.current.setVolume(volume);
-            }
-          }
-        } catch (error) {
-          console.warn("Video playback failed:", error);
-        }
-      };
-      playVideo();
+      video
+        .play()
+        .then(() => {
+          video.muted = false;
+          sound.setVolume(volume);
+        })
+        .catch(console.warn);
+    });
 
-      return () => {
-        if (videoRef.current) {
-          videoRef.current.pause();
-          screenMaterial.map = null;
-          screenMaterial.emissiveMap = null;
-          screenMaterial.needsUpdate = true;
-          videoTexture.dispose();
-        }
-      };
-    }
-  }, [playlist, currentVideoIndex, hasInteracted, volume, camera]);
+    video.addEventListener("ended", () => {
+      setCurrentVideoIndex((prev) => (prev + 1) % playlist.length);
+    });
 
-  useEffect(() => {
-    const handleInteraction = () => {
-      if (!hasInteracted && videoRef.current && audioRef.current) {
-        videoRef.current.muted = false;
-        audioRef.current.setVolume(volume);
-        setHasInteracted(true);
-        document.removeEventListener("click", handleInteraction);
-        document.removeEventListener("keydown", handleInteraction);
-      }
-    };
-
-    document.addEventListener("click", handleInteraction);
-    document.addEventListener("keydown", handleInteraction);
+    // Load the video
+    video.load();
 
     return () => {
-      document.removeEventListener("click", handleInteraction);
-      document.removeEventListener("keydown", handleInteraction);
+      if (videoRef.current) {
+        videoRef.current.pause();
+        videoRef.current.src = "";
+        videoRef.current.load();
+        videoRef.current = null;
+      }
+      if (audioRef.current) {
+        audioRef.current.disconnect();
+        screenRef.current?.remove(audioRef.current);
+        audioRef.current = null;
+      }
+      if (screenRef.current) {
+        const material = screenRef.current.material as MeshStandardMaterial;
+        material.map?.dispose();
+        material.emissiveMap?.dispose();
+        material.map = null;
+        material.emissiveMap = null;
+        material.needsUpdate = true;
+      }
+      camera.remove(listener);
     };
-  }, [hasInteracted, volume]);
+  }, [playlist, currentVideoIndex, hasInteracted, volume, camera]);
 
   return (
     <group position={position} rotation={rotation}>
