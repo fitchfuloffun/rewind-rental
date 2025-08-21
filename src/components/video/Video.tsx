@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { Text } from "@react-three/drei";
 import { useFrame, useLoader, useThree } from "@react-three/fiber";
 import {
   Color,
@@ -10,6 +11,7 @@ import {
 import { MovieData } from "@/App.tsx";
 import { MAX_INTERACTION_DISTANCE, VIDEO_DIMENSIONS } from "@/constants.ts";
 import { useCrosshair } from "@/hooks/useCrosshair.ts";
+import { useDebug } from "@/hooks/useDebug.ts";
 import { getAssetUrl } from "@/utils/asset.ts";
 
 // Import the hook
@@ -28,6 +30,7 @@ export function Video({
   const { WIDTH, HEIGHT, DEPTH } = VIDEO_DIMENSIONS;
   const meshRef = useRef<Mesh>(null);
   const [isWithinDistance, setIsWithinDistance] = useState(false);
+  const { debugMode } = useDebug();
 
   const texturePath =
     movieData.cover && movieData.cover != ""
@@ -108,13 +111,54 @@ export function Video({
   const currentScale = hovered ? 1.05 : 1;
 
   return (
-    <mesh
-      ref={meshRef}
-      material={materials}
-      position={position}
-      scale={[currentScale, currentScale, currentScale]}
-    >
-      <boxGeometry args={[WIDTH, HEIGHT, DEPTH]} />
-    </mesh>
+    <group position={position}>
+      {debugMode && (
+        <group position={[0, 0, 0.1]}>
+          <mesh position={[0, 0, -0.01]}>
+            <planeGeometry args={[WIDTH, HEIGHT]} />
+            <meshBasicMaterial color="#ffffff" />
+          </mesh>
+          <Text
+            position={[0, 0.2, 0]}
+            fontSize={0.04}
+            color="black"
+            maxWidth={WIDTH - 0.03}
+            textAlign="center"
+            anchorY="top"
+          >
+            ID: {movieData.id}
+          </Text>
+          <Text
+            position={[0, 0.1, 0]}
+            fontSize={0.04}
+            overflowWrap="break-word"
+            color="black"
+            maxWidth={WIDTH - 0.03}
+            textAlign="center"
+            anchorY="top"
+          >
+            Title: {movieData.title}
+          </Text>
+          <Text
+            position={[0, -0.1, 0]}
+            fontSize={0.04}
+            overflowWrap="break-word"
+            color="black"
+            maxWidth={WIDTH - 0.03}
+            textAlign="center"
+            anchorY="top"
+          >
+            Cover URL: {movieData.cover}
+          </Text>
+        </group>
+      )}
+      <mesh
+        ref={meshRef}
+        material={materials}
+        scale={[currentScale, currentScale, currentScale]}
+      >
+        <boxGeometry args={[WIDTH, HEIGHT, DEPTH]} />
+      </mesh>
+    </group>
   );
 }
