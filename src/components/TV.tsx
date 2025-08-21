@@ -3,6 +3,7 @@ import { useTexture } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
 import {
   AudioListener,
+  Color,
   CylinderGeometry,
   Matrix4,
   Mesh,
@@ -10,6 +11,7 @@ import {
   PositionalAudio,
   VideoTexture,
 } from "three";
+import { useCrosshair } from "@/hooks/useCrosshair.ts";
 import { getAssetUrl } from "@/utils/asset";
 
 type TVProps = {
@@ -31,10 +33,48 @@ export function TV({
   const videoRef = useRef<HTMLVideoElement>(null);
   const audioRef = useRef<PositionalAudio>(null);
   const screenRef = useRef<Mesh>(null);
+  const meshRef = useRef<Mesh>(null);
   const [hasInteracted, setHasInteracted] = useState(false);
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
   const [isMuted, setIsMuted] = useState(defaultMuted ?? false);
   const muteTexture = useTexture(getAssetUrl("/assets/textures/mute.png"));
+  const { hoveredObject, registerObject, unregisterObject } = useCrosshair();
+
+  const hovered = hoveredObject === meshRef.current;
+  const material = useMemo(() => {
+    return new MeshStandardMaterial({ color: "#1a1a1a" });
+  }, []);
+
+  useEffect(() => {
+    if (meshRef.current) {
+      const id = "tv";
+      registerObject(meshRef.current, id);
+
+      return () => unregisterObject(id);
+    }
+  }, [registerObject, unregisterObject]);
+
+  // Update emissive properties when hover state changes
+  useEffect(() => {
+    material.emissive = new Color("#ffffff");
+    material.emissiveIntensity = hovered ? 0.1 : 0;
+    material.needsUpdate = true;
+  }, [hovered, material]);
+
+  useEffect(() => {
+    const handleClick = (event: MouseEvent) => {
+      if (hovered && document.pointerLockElement) {
+        event.preventDefault();
+        event.stopPropagation();
+        setIsMuted(!isMuted);
+      }
+    };
+
+    if (hovered) {
+      document.addEventListener("click", handleClick);
+      return () => document.removeEventListener("click", handleClick);
+    }
+  }, [hovered, isMuted]);
 
   // Create curved screen geometry with proper scaling
   const curvedScreen = useMemo(() => {
@@ -78,14 +118,18 @@ export function TV({
     };
   }, [hasInteracted]);
 
+  // Video setup effect - capture initial mute state to avoid dependency
   useEffect(() => {
     if (!playlist.length || !screenRef.current || !hasInteracted) return;
+
+    // Capture the current mute state at the time of video creation
+    const initialMuteState = isMuted;
 
     const video = document.createElement("video");
     videoRef.current = video;
     video.playsInline = true;
     video.crossOrigin = "anonymous";
-    video.muted = isMuted; // Set initial mute state
+    video.muted = initialMuteState; // Set initial mute state
     video.src = playlist[currentVideoIndex];
 
     const listener = new AudioListener();
@@ -111,7 +155,7 @@ export function TV({
       sound.setRolloffFactor(2);
       sound.setDistanceModel("linear");
       sound.setDirectionalCone(90, 180, 0.1);
-      sound.setVolume(isMuted ? 0 : volume); // Set initial volume based on mute state
+      sound.setVolume(initialMuteState ? 0 : volume); // Set initial volume based on mute state
 
       screenRef.current.add(sound);
       audioRef.current = sound;
@@ -119,8 +163,8 @@ export function TV({
       video
         .play()
         .then(() => {
-          video.muted = isMuted;
-          sound.setVolume(isMuted ? 0 : volume);
+          video.muted = initialMuteState;
+          sound.setVolume(initialMuteState ? 0 : volume);
         })
         .catch(console.warn);
     });
@@ -133,6 +177,8 @@ export function TV({
     video.load();
 
     return () => {
+      const { current: screenRefCurrent } = screenRef;
+
       if (videoRef.current) {
         videoRef.current.pause();
         videoRef.current.src = "";
@@ -141,11 +187,11 @@ export function TV({
       }
       if (audioRef.current) {
         audioRef.current.disconnect();
-        screenRef.current?.remove(audioRef.current);
+        screenRefCurrent?.remove(audioRef.current);
         audioRef.current = null;
       }
-      if (screenRef.current) {
-        const material = screenRef.current.material as MeshStandardMaterial;
+      if (screenRefCurrent) {
+        const material = screenRefCurrent.material as MeshStandardMaterial;
         material.map?.dispose();
         material.emissiveMap?.dispose();
         material.map = null;
@@ -154,14 +200,22 @@ export function TV({
       }
       camera.remove(listener);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [playlist, currentVideoIndex, hasInteracted, volume, camera]);
+
+  // Separate effect to handle mute/unmute without restarting video
+  useEffect(() => {
+    if (videoRef.current && audioRef.current) {
+      videoRef.current.muted = isMuted;
+      audioRef.current.setVolume(isMuted ? 0 : volume);
+    }
+  }, [isMuted, volume]);
 
   return (
     <group position={position} rotation={rotation}>
       {/* TV Casing */}
-      <mesh>
+      <mesh ref={meshRef} material={material}>
         <boxGeometry args={[2, 1.5, 1.5]} />
-        <meshStandardMaterial color="#1a1a1a" />
       </mesh>
 
       {/* Curved Screen */}
