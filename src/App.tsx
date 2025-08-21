@@ -47,7 +47,7 @@ const cageMovies = cage.cast.map(
 
 const twilightMovies = twilight.parts.map(
   (movie: TMDBMovieData, movieIndex: number) => ({
-    id: `cage-${movieIndex}`,
+    id: `twilight-${movieIndex}`,
     title: movie.title,
     description: movie.overview,
     cover: getImageUrl(movie.poster_path, "poster", "medium"),
@@ -67,7 +67,7 @@ const trendingMovies = trending.map((response) =>
 
 const movies = popular.map((response, responseIndex: number) =>
   response.results.map((movie: TMDBMovieData, movieIndex: number) => ({
-    id: `${responseIndex}${movieIndex}`,
+    id: `popular-${responseIndex}-${movieIndex}`,
     title: movie.title,
     description: movie.overview,
     cover: getImageUrl(movie.poster_path, "poster", "medium") ?? "",
