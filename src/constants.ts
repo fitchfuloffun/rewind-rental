@@ -80,3 +80,5 @@ export const SHELF_DIMENSIONS = {
     return slots;
   },
 };
+
+export const MAX_INTERACTION_DISTANCE = 5;

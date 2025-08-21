@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useTexture } from "@react-three/drei";
-import { useThree } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import {
   AudioListener,
   Color,
@@ -9,8 +9,10 @@ import {
   Mesh,
   MeshStandardMaterial,
   PositionalAudio,
+  Vector3,
   VideoTexture,
 } from "three";
+import { MAX_INTERACTION_DISTANCE } from "@/constants.ts";
 import { useCrosshair } from "@/hooks/useCrosshair.ts";
 import { getAssetUrl } from "@/utils/asset";
 
@@ -37,10 +39,24 @@ export function TV({
   const [hasInteracted, setHasInteracted] = useState(false);
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
   const [isMuted, setIsMuted] = useState(defaultMuted ?? false);
+  const [isWithinDistance, setIsWithinDistance] = useState(false);
   const muteTexture = useTexture(getAssetUrl("/assets/textures/mute.png"));
   const { hoveredObject, registerObject, unregisterObject } = useCrosshair();
 
-  const hovered = hoveredObject === meshRef.current;
+  const hovered = hoveredObject === meshRef.current && isWithinDistance;
+
+  // Check distance on each frame
+  useFrame(() => {
+    if (meshRef.current) {
+      const tvPosition = meshRef.current.getWorldPosition(new Vector3());
+      const distance = tvPosition.distanceTo(camera.position);
+      const withinDistance = distance <= MAX_INTERACTION_DISTANCE;
+
+      if (withinDistance !== isWithinDistance) {
+        setIsWithinDistance(withinDistance);
+      }
+    }
+  });
   const material = useMemo(() => {
     return new MeshStandardMaterial({ color: "#1a1a1a" });
   }, []);

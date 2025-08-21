@@ -1,8 +1,14 @@
-import { useEffect, useMemo, useRef } from "react";
-import { useLoader } from "@react-three/fiber";
-import { Color, Mesh, MeshStandardMaterial, TextureLoader } from "three";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useFrame, useLoader, useThree } from "@react-three/fiber";
+import {
+  Color,
+  Mesh,
+  MeshStandardMaterial,
+  TextureLoader,
+  Vector3,
+} from "three";
 import { MovieData } from "@/App.tsx";
-import { VIDEO_DIMENSIONS } from "@/constants.ts";
+import { MAX_INTERACTION_DISTANCE, VIDEO_DIMENSIONS } from "@/constants.ts";
 import { useCrosshair } from "@/hooks/useCrosshair.ts";
 import { getAssetUrl } from "@/utils/asset.ts";
 
@@ -18,8 +24,11 @@ export function Video({
   movieData,
   onVideoClick,
 }: VideoProps) {
+  const { camera } = useThree();
   const { WIDTH, HEIGHT, DEPTH } = VIDEO_DIMENSIONS;
   const meshRef = useRef<Mesh>(null);
+  const [isWithinDistance, setIsWithinDistance] = useState(false);
+
   const texturePath =
     movieData.cover && movieData.cover != ""
       ? movieData.cover
@@ -28,8 +37,20 @@ export function Video({
   const { hoveredObject, registerObject, unregisterObject } = useCrosshair();
 
   // Check if this specific video is hovered
-  const hovered = hoveredObject === meshRef.current;
+  const hovered = hoveredObject === meshRef.current && isWithinDistance;
 
+  // Check distance on each frame
+  useFrame(() => {
+    if (meshRef.current) {
+      const videoPosition = meshRef.current.getWorldPosition(new Vector3());
+      const distance = videoPosition.distanceTo(camera.position);
+      const withinDistance = distance <= MAX_INTERACTION_DISTANCE;
+
+      if (withinDistance !== isWithinDistance) {
+        setIsWithinDistance(withinDistance);
+      }
+    }
+  });
   const materials = useMemo(() => {
     const baseMaterial = new MeshStandardMaterial({ color: "#1a1a1a" });
     const coverMaterial = new MeshStandardMaterial({ map: texture });
