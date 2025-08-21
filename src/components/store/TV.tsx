@@ -14,7 +14,7 @@ import {
 } from "three";
 import { MAX_INTERACTION_DISTANCE } from "@/constants.ts";
 import { useCrosshair } from "@/hooks/useCrosshair.ts";
-import { getAssetUrl } from "@/utils/asset";
+import { getAssetUrl } from "@/utils/asset.ts";
 
 type TVProps = {
   position?: [number, number, number];

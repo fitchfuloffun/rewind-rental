@@ -1,4 +1,4 @@
-import { TV } from "@/components/TV.tsx";
+import { TV } from "@/components/store/TV.tsx";
 import { StoreDoor } from "@/components/store/structure/StoreDoor.tsx";
 import { StoreFloor } from "@/components/store/structure/StoreFloor.tsx";
 import { StoreWall } from "@/components/store/structure/StoreWall.tsx";
