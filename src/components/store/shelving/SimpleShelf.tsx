@@ -40,12 +40,12 @@ export function SimpleShelf({
 
   return (
     <group position={position} rotation={rotation} ref={meshRef}>
-      <group position={[0, HALF_HEIGHT + 0.4, -0.2]}>
+      <group position={[0, HALF_HEIGHT + 0.2, -0.2]}>
         <mesh>
-          <boxGeometry args={[WIDTH - 0.1, 1, 0.1]} />
+          <boxGeometry args={[WIDTH - 0.1, 0.6, 0.1]} />
           <meshStandardMaterial color="#1e3c72" />
         </mesh>
-        <Text position={[0, 0, 0.06]} fontSize={0.2} maxWidth={WIDTH}>
+        <Text position={[0, 0.1, 0.06]} fontSize={0.2} maxWidth={WIDTH}>
           {signText}
         </Text>
       </group>
