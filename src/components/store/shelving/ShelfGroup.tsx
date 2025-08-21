@@ -19,6 +19,11 @@ export function ShelfGroup({
   signText,
 }: ShelfGroupProps) {
   const shelfCount = Math.ceil(movies.length / MOVIES_PER_SHELF);
+
+  // Calculate total width and offset to center the group
+  const totalWidth = SHELF_DIMENSIONS.WIDTH * shelfCount;
+  const centreOffset = -totalWidth / 2 + SHELF_DIMENSIONS.WIDTH / 2;
+
   let shelves = [];
 
   for (let i = 0; i < shelfCount; i++) {
@@ -26,7 +31,7 @@ export function ShelfGroup({
     const end = start + MOVIES_PER_SHELF;
     const shelfMovies = movies.slice(start, end);
     const shelfPosition: [number, number, number] = [
-      SHELF_DIMENSIONS.WIDTH * i,
+      centreOffset + SHELF_DIMENSIONS.WIDTH * i,
       0,
       0,
     ];
