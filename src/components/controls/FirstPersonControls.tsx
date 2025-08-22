@@ -13,8 +13,13 @@ export function FirstPersonControls({
   const keysPressed = useRef<{ [key: string]: boolean }>({});
   const rotation = useRef({ x: 0, y: 0 });
   const isPointerLocked = useRef(false);
+  const isCrouching = useRef(false);
   const playerRadius = 0.5; // Player collision radius
   const { checkCollisions } = useCollision();
+
+  // Height constants
+  const standingHeight = 3;
+  const crouchingHeight = 1.5;
 
   useEffect(() => {
     // Release pointer lock when disabled
@@ -31,6 +36,11 @@ export function FirstPersonControls({
 
     const handleKeyDown = (event: KeyboardEvent) => {
       keysPressed.current[event.code] = true;
+
+      // Toggle crouching with left Ctrl
+      if (event.code === "ControlLeft") {
+        isCrouching.current = !isCrouching.current;
+      }
     };
 
     const handleKeyUp = (event: KeyboardEvent) => {
@@ -88,16 +98,16 @@ export function FirstPersonControls({
   }, [gl.domElement, disabled]);
 
   // Check collision with shelves/obstacles
-  const checkCollision = (position: Vector3): boolean => {
+  const checkCollision = (position: Vector3, height: number): boolean => {
     const playerBox = new Box3(
       new Vector3(
         position.x - playerRadius,
-        position.y - 1, // Player height bottom
+        position.y - height / 2, // Adjust based on current height
         position.z - playerRadius,
       ),
       new Vector3(
         position.x + playerRadius,
-        position.y + 1, // Player height top
+        position.y + height / 2, // Adjust based on current height
         position.z + playerRadius,
       ),
     );
@@ -112,16 +122,27 @@ export function FirstPersonControls({
 
     const isRunning = keysPressed.current["ShiftLeft"];
     const baseSpeed = 6; // Increased base speed
-    const speed = (isRunning ? baseSpeed * 2 : baseSpeed) * delta;
-    const walkingHeight = 3; // Fixed walking height
+
+    // Reduce speed when crouching
+    const crouchSpeedMultiplier = isCrouching.current ? 0.5 : 1;
+    const runSpeedMultiplier = isRunning && !isCrouching.current ? 2 : 1;
+    const speed =
+      baseSpeed * crouchSpeedMultiplier * runSpeedMultiplier * delta;
+
+    // Get current height based on crouch state
+    const currentHeight = isCrouching.current
+      ? crouchingHeight
+      : standingHeight;
 
     // Apply mouse rotation
     camera.rotation.order = "YXZ";
     camera.rotation.y = rotation.current.y;
     camera.rotation.x = rotation.current.x;
 
-    // Lock camera to walking height
-    camera.position.y = walkingHeight;
+    // Smoothly transition between heights
+    const heightDifference = currentHeight - camera.position.y;
+    const heightTransitionSpeed = 8; // Adjust for faster/slower transition
+    camera.position.y += heightDifference * heightTransitionSpeed * delta;
 
     // Calculate movement vector
     const moveVector = new Vector3();
@@ -149,20 +170,18 @@ export function FirstPersonControls({
       const currentPos = camera.position.clone();
       const testXPos = currentPos.clone();
       testXPos.x += moveVector.x;
-      testXPos.y = walkingHeight;
 
-      // Check collision (includes both walls and shelves)
-      if (!checkCollision(testXPos)) {
+      // Check collision with current height
+      if (!checkCollision(testXPos, currentHeight)) {
         camera.position.x = testXPos.x;
       }
 
       // Test Z movement separately for wall sliding
       const testZPos = camera.position.clone();
       testZPos.z += moveVector.z;
-      testZPos.y = walkingHeight;
 
-      // Check collision (includes both walls and shelves)
-      if (!checkCollision(testZPos)) {
+      // Check collision with current height
+      if (!checkCollision(testZPos, currentHeight)) {
         camera.position.z = testZPos.z;
       }
     }
