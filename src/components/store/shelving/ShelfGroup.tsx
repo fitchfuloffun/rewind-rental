@@ -6,7 +6,7 @@ type ShelfGroupProps = {
   position: [number, number, number];
   rotation?: [number, number, number];
   onVideoClick: (movie: MovieResult) => void;
-  movies: (MovieResult | undefined)[];
+  movies?: MovieResult[];
   signText?: string;
 };
 
@@ -18,6 +18,10 @@ export function ShelfGroup({
   movies,
   signText,
 }: ShelfGroupProps) {
+  if (!movies || movies.length === 0) {
+    return null;
+  }
+
   const shelfCount = Math.ceil(movies.length / MOVIES_PER_SHELF);
 
   // Calculate total width and offset to center the group

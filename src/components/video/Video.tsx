@@ -73,12 +73,12 @@ export function Video({
   // Register/unregister this object with the crosshair manager
   useEffect(() => {
     if (meshRef.current) {
-      const id = `video-${movieData.title}`;
+      const id = `video-${movieData.id}-${position.join("-")}`;
       registerObject(meshRef.current, id);
 
       return () => unregisterObject(id);
     }
-  }, [registerObject, unregisterObject, movieData.id, movieData.title]);
+  }, [registerObject, unregisterObject, movieData.id, position]);
 
   // Update emissive properties when hover state changes
   useEffect(() => {

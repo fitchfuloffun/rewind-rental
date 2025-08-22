@@ -12,10 +12,11 @@ type StoreSceneProps = {
 };
 
 export type MoviesBySection = {
-  popular: (MovieResult | undefined)[];
-  cage: (MovieResult | undefined)[];
-  twilight: (MovieResult | undefined)[];
-  trending: (MovieResult | undefined)[];
+  moviesByGenre: Record<string, MovieResult[]>;
+  popular?: MovieResult[];
+  cage?: MovieResult[];
+  twilight?: MovieResult[];
+  trending?: MovieResult[];
 };
 
 // Main scene component
