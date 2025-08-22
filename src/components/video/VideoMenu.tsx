@@ -1,8 +1,8 @@
-import { MovieResult } from "moviedb-promise";
+import { MovieData } from "@/components/store/StoreScene.tsx";
 import { getImageUrl } from "@/utils/image.ts";
 
 type VideoMenuProps = {
-  movie: MovieResult;
+  movie: MovieData;
   onClose: () => void;
 };
 

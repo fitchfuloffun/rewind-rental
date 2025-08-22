@@ -1,7 +1,7 @@
 import { Suspense, useEffect, useRef } from "react";
 import { Text } from "@react-three/drei";
-import { MovieResult } from "moviedb-promise";
 import { Object3D } from "three";
+import { MovieData } from "@/components/store/StoreScene.tsx";
 import { Video } from "@/components/video/Video.tsx";
 import { VideoPlaceholder } from "@/components/video/VideoPlaceholder.tsx";
 import { SHELF_DIMENSIONS } from "@/constants.ts";
@@ -12,8 +12,8 @@ type SimpleShelfProps = {
   position: [x: number, y: number, z: number];
   color?: string;
   rotation?: [x: number, y: number, z: number];
-  onVideoClick: (movie: MovieResult) => void;
-  videos?: (MovieResult | undefined)[];
+  onVideoClick: (movie: MovieData) => void;
+  videos?: (MovieData | undefined)[];
   signText?: string;
   idPrefix?: string;
 };

@@ -1,10 +1,9 @@
 import { useState } from "react";
 import { Canvas } from "@react-three/fiber";
-import { MovieResult } from "moviedb-promise";
 import { CubeTextureLoader, Scene } from "three";
 import { ControlsDisplay } from "@/components/controls/ControlsDisplay.tsx";
 import { Crosshair } from "@/components/controls/Crosshair.tsx";
-import { StoreScene } from "@/components/store/StoreScene.tsx";
+import { MovieData, StoreScene } from "@/components/store/StoreScene.tsx";
 import { VideoMenu } from "@/components/video/VideoMenu.tsx";
 import { STORE_DIMENSIONS } from "@/constants.ts";
 import { CollisionProvider } from "@/providers/CollisionProvider.tsx";
@@ -16,9 +15,9 @@ import { getAssetUrl } from "@/utils/asset.ts";
 const moviesBySection = await fetchAllMovies();
 
 export default function App() {
-  const [selectedVideo, setSelectedVideo] = useState<MovieResult | null>(null);
+  const [selectedVideo, setSelectedVideo] = useState<MovieData | null>(null);
 
-  const handleVideoClick = (movieData: MovieResult) => {
+  const handleVideoClick = (movieData: MovieData) => {
     setSelectedVideo(movieData);
   };
 

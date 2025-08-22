@@ -23,7 +23,7 @@ export async function fetchAllMovies(): Promise<MoviesBySection> {
         media_type: "movie",
         time_window: "day",
       }),
-    ]).then((responses) => responses.flat()),
+    ]).then((responses) => responses.filter((response) => !!response).flat()),
   };
 }
 
@@ -38,9 +38,7 @@ export async function getPersonMovieCredits(personId: number) {
 export async function getTrendingMovies(params: TrendingRequest) {
   return moviedb
     .trending({ ...params, media_type: "movie" })
-    .then((response) =>
-      response.results?.filter((movie): movie is MovieResult => !!movie),
-    );
+    .then((response) => response.results);
 }
 
 export async function getCollectionInfo(collectionId: number) {
@@ -72,7 +70,8 @@ export async function getMoviesByGenre() {
         if (!genreMoviesResponse.genre.name) {
           return acc;
         }
-        acc[genreMoviesResponse.genre.name] = genreMoviesResponse.results;
+        acc[genreMoviesResponse.genre.name] =
+          genreMoviesResponse.results.filter((result) => !!result);
       }
       return acc;
     },

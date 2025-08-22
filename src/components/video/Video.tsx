@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Text } from "@react-three/drei";
 import { useFrame, useLoader, useThree } from "@react-three/fiber";
-import { MovieResult } from "moviedb-promise";
 import {
   Color,
   Mesh,
@@ -9,6 +8,7 @@ import {
   TextureLoader,
   Vector3,
 } from "three";
+import { MovieData } from "@/components/store/StoreScene.tsx";
 import { MAX_INTERACTION_DISTANCE, VIDEO_DIMENSIONS } from "@/constants.ts";
 import { useCrosshair } from "@/hooks/useCrosshair.ts";
 import { useDebug } from "@/hooks/useDebug.ts";
@@ -18,8 +18,8 @@ import { getImageUrl } from "@/utils/image.ts";
 // Import the hook
 type VideoProps = {
   position: [x: number, y: number, z: number];
-  movieData: MovieResult;
-  onVideoClick: (movie: MovieResult) => void;
+  movieData: MovieData;
+  onVideoClick: (movie: MovieData) => void;
   idPrefix?: string;
 };
 

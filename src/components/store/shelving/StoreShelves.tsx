@@ -1,5 +1,4 @@
-import { MovieResult } from "moviedb-promise";
-import { MoviesBySection } from "@/components/store/StoreScene.tsx";
+import { MovieData, MoviesBySection } from "@/components/store/StoreScene.tsx";
 import { ShelfGroup } from "@/components/store/shelving/ShelfGroup.tsx";
 import { SHELF_DIMENSIONS, STORE_DIMENSIONS } from "@/constants.ts";
 
@@ -7,7 +6,7 @@ export function StoreShelves({
   onVideoClick,
   moviesBySection,
 }: {
-  onVideoClick: (movie: MovieResult) => void;
+  onVideoClick: (movie: MovieData) => void;
   moviesBySection: MoviesBySection;
 }) {
   const genreProps: Record<
