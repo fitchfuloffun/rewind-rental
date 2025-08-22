@@ -1,4 +1,8 @@
+import { useEffect, useState } from "react";
+import { StreamingOption } from "streaming-availability";
 import { MovieData } from "@/components/store/StoreScene.tsx";
+import { WatchProvidersMenu } from "@/components/video/WatchProvidersMenu.tsx";
+import { getWatchProvidersByMovieId } from "@/services/motnApi.ts";
 import { getImageUrl } from "@/utils/image.ts";
 
 type VideoMenuProps = {
@@ -8,7 +12,23 @@ type VideoMenuProps = {
 
 // Full-screen video menu component
 export function VideoMenu({ movie, onClose }: VideoMenuProps) {
-  if (!movie) return null;
+  const [watchProviders, setWatchProviders] = useState<
+    StreamingOption[] | null
+  >(null);
+
+  useEffect(() => {
+    async function fetchWatchProviders() {
+      if (!movie || !movie.id) return;
+      const fetchedWatchProviders = await getWatchProvidersByMovieId(movie.id);
+
+      setWatchProviders(fetchedWatchProviders);
+
+      console.log("Watch Providers:", fetchedWatchProviders);
+    }
+
+    fetchWatchProviders();
+  }, [movie]);
+
   const cover = getImageUrl(movie.poster_path, "poster", "medium");
 
   return (
@@ -54,7 +74,11 @@ export function VideoMenu({ movie, onClose }: VideoMenuProps) {
             borderRadius: "8px",
           }}
         >
-          {cover ? <img src={cover} width="150px" /> : "Poster not found"}
+          {cover ? (
+            <img alt={movie.title} src={cover} width="150px" />
+          ) : (
+            "Poster not found"
+          )}
         </div>
 
         {/* Movie title */}
@@ -76,33 +100,13 @@ export function VideoMenu({ movie, onClose }: VideoMenuProps) {
           {movie.overview}
         </p>
 
+        {/* Watch providers */}
+        {watchProviders && (
+          <WatchProvidersMenu watchProviders={watchProviders} />
+        )}
+
         {/* Buttons */}
         <div style={{ display: "flex", gap: "15px", justifyContent: "center" }}>
-          <button
-            style={{
-              padding: "12px 25px",
-              fontSize: "1rem",
-              backgroundColor: "#4CAF50",
-              color: "white",
-              border: "none",
-              borderRadius: "8px",
-              cursor: "pointer",
-              fontWeight: "bold",
-            }}
-            onClick={() => {
-              console.log("Rented:", movie.title);
-              onClose();
-            }}
-            onMouseOver={(e) =>
-              (e.currentTarget.style.backgroundColor = "#45a049")
-            }
-            onMouseOut={(e) =>
-              (e.currentTarget.style.backgroundColor = "#4CAF50")
-            }
-          >
-            Rent Now
-          </button>
-
           <button
             style={{
               padding: "12px 25px",

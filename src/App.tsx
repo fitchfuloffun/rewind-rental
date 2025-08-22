@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import { CubeTextureLoader, Scene } from "three";
 import { ControlsDisplay } from "@/components/controls/ControlsDisplay.tsx";
@@ -64,7 +64,11 @@ export default function App() {
       </Canvas>
       <Crosshair />
 
-      {selectedVideo && <VideoMenu movie={selectedVideo} onClose={closeMenu} />}
+      {selectedVideo && (
+        <Suspense>
+          <VideoMenu movie={selectedVideo} onClose={closeMenu} />
+        </Suspense>
+      )}
       {/* Controls display */}
       <ControlsDisplay />
     </div>

@@ -2,6 +2,12 @@ const TMDB_IMAGE_BASE_URL = "https://image.tmdb.org/t/p/";
 
 // Common image sizes
 export const IMAGE_SIZES = {
+  logo: {
+    small: "w45",
+    medium: "w92",
+    large: "w154",
+    original: "original",
+  },
   poster: {
     small: "w185",
     medium: "w342",
@@ -18,7 +24,7 @@ export const IMAGE_SIZES = {
 
 export const getImageUrl = (
   imagePath?: string | null,
-  type: "poster" | "backdrop" = "poster",
+  type: "poster" | "backdrop" | "logo" = "poster",
   size: "small" | "medium" | "large" | "original" = "medium",
 ) => {
   if (!imagePath) return null;

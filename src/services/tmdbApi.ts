@@ -78,3 +78,12 @@ export async function getMoviesByGenre() {
     {} as Record<string, MovieResult[]>,
   );
 }
+
+export async function getWatchProviders(movieId: number) {
+  return moviedb.movieWatchProviders(movieId).then((response) => {
+    if (response.results && response.results.AU) {
+      return response.results.AU;
+    }
+    return null;
+  });
+}

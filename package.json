@@ -17,6 +17,7 @@
     "moviedb-promise": "^4.0.7",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "streaming-availability": "^4.4.0",
     "three": "^0.179.1"
   },
   "devDependencies": {
