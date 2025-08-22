@@ -89,6 +89,7 @@ export function SimpleShelf({
                   position={VIDEO_SLOTS[index]}
                   movieData={video}
                   onVideoClick={onVideoClick}
+                  idPrefix={idPrefix}
                 />
               </Suspense>
             );

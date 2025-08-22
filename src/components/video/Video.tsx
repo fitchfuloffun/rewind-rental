@@ -20,12 +20,14 @@ type VideoProps = {
   position: [x: number, y: number, z: number];
   movieData: MovieResult;
   onVideoClick: (movie: MovieResult) => void;
+  idPrefix?: string;
 };
 
 export function Video({
   position = [0, 0, 0],
   movieData,
   onVideoClick,
+  idPrefix,
 }: VideoProps) {
   const { camera } = useThree();
   const { WIDTH, HEIGHT, DEPTH } = VIDEO_DIMENSIONS;
@@ -73,12 +75,12 @@ export function Video({
   // Register/unregister this object with the crosshair manager
   useEffect(() => {
     if (meshRef.current) {
-      const id = `video-${movieData.id}-${position.join("-")}`;
+      const id = `${idPrefix}-video-${movieData.id}-${position.join("-")}`;
       registerObject(meshRef.current, id);
 
       return () => unregisterObject(id);
     }
-  }, [registerObject, unregisterObject, movieData.id, position]);
+  }, [registerObject, unregisterObject, movieData.id, position, idPrefix]);
 
   // Update emissive properties when hover state changes
   useEffect(() => {

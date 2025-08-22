@@ -24,7 +24,6 @@ export async function fetchAllMovies(): Promise<MoviesBySection> {
         time_window: "day",
       }),
     ]).then((responses) => responses.flat()),
-    adult: await getAdultMovies(),
   };
 }
 
