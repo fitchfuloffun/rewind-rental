@@ -1,4 +1,4 @@
-import { MovieData } from "@/App.tsx";
+import { MovieResult } from "moviedb-promise";
 import { StoreShelves } from "@/components/store/shelving/StoreShelves.tsx";
 import { FirstPersonControls } from "../controls/FirstPersonControls.tsx";
 import { Lighting } from "./lighting/Lighting.tsx";
@@ -6,16 +6,23 @@ import { StoreSign } from "./structure/StoreSign.tsx";
 import { StoreStructure } from "./structure/StoreStructure.tsx";
 
 type StoreSceneProps = {
-  onVideoClick: (movie: MovieData) => void;
+  onVideoClick: (movie: MovieResult) => void;
   disableControls?: boolean;
-  movies: MovieData[][];
+  moviesBySection: MoviesBySection;
+};
+
+export type MoviesBySection = {
+  popular: (MovieResult | undefined)[];
+  cage: (MovieResult | undefined)[];
+  twilight: (MovieResult | undefined)[];
+  trending: (MovieResult | undefined)[];
 };
 
 // Main scene component
 export function StoreScene({
   onVideoClick,
   disableControls = false,
-  movies,
+  moviesBySection,
 }: StoreSceneProps) {
   return (
     <>
@@ -23,7 +30,10 @@ export function StoreScene({
 
       <Lighting />
 
-      <StoreShelves onVideoClick={onVideoClick} movies={movies} />
+      <StoreShelves
+        onVideoClick={onVideoClick}
+        moviesBySection={moviesBySection}
+      />
       {/* Store structure */}
       <StoreStructure />
 

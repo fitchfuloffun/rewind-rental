@@ -1,13 +1,15 @@
-import { MovieData } from "@/App.tsx";
+import { MovieResult } from "moviedb-promise";
+import { getImageUrl } from "@/utils/image.ts";
 
 type VideoMenuProps = {
-  movie: MovieData;
+  movie: MovieResult;
   onClose: () => void;
 };
 
 // Full-screen video menu component
 export function VideoMenu({ movie, onClose }: VideoMenuProps) {
   if (!movie) return null;
+  const cover = getImageUrl(movie.poster_path, "poster", "medium");
 
   return (
     <div
@@ -52,11 +54,7 @@ export function VideoMenu({ movie, onClose }: VideoMenuProps) {
             borderRadius: "8px",
           }}
         >
-          {movie.cover ? (
-            <img src={movie.cover} width="150px" />
-          ) : (
-            "Poster not found"
-          )}
+          {cover ? <img src={cover} width="150px" /> : "Poster not found"}
         </div>
 
         {/* Movie title */}
@@ -71,11 +69,11 @@ export function VideoMenu({ movie, onClose }: VideoMenuProps) {
         </h2>
 
         {/* Movie details */}
-        <p style={{ margin: "0 0 25px 0", fontSize: "1.1rem" }}>
-          Rental Price: ${movie.price}
-        </p>
+        {/*<p style={{ margin: "0 0 25px 0", fontSize: "1.1rem" }}>*/}
+        {/*  Rental Price: ${movie.price}*/}
+        {/*</p>*/}
         <p style={{ margin: "0 0 25px 0", fontSize: "0.9rem", opacity: 0.8 }}>
-          {movie.description}
+          {movie.overview}
         </p>
 
         {/* Buttons */}

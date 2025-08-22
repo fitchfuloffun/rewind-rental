@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { Text } from "@react-three/drei";
+import { MovieResult } from "moviedb-promise";
 import { Object3D } from "three";
-import { MovieData } from "@/App.tsx";
 import { Video } from "@/components/video/Video.tsx";
 import { VideoPlaceholder } from "@/components/video/VideoPlaceholder.tsx";
 import { SHELF_DIMENSIONS } from "@/constants.ts";
@@ -12,8 +12,8 @@ type SimpleShelfProps = {
   position: [x: number, y: number, z: number];
   color?: string;
   rotation?: [x: number, y: number, z: number];
-  onVideoClick: (movie: MovieData) => void;
-  videos?: MovieData[];
+  onVideoClick: (movie: MovieResult) => void;
+  videos?: (MovieResult | undefined)[];
   signText?: string;
   idPrefix?: string;
 };
@@ -79,6 +79,7 @@ export function SimpleShelf({
         {!debugMode &&
           videos &&
           videos.map((video, index) => {
+            if (!video) return null;
             return (
               <Video
                 key={`video-${video.title}`}

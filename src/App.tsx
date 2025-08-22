@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Canvas } from "@react-three/fiber";
+import { MovieResult } from "moviedb-promise";
 import { CubeTextureLoader, Scene } from "three";
 import { ControlsDisplay } from "@/components/controls/ControlsDisplay.tsx";
 import { Crosshair } from "@/components/controls/Crosshair.tsx";
@@ -9,79 +10,15 @@ import { STORE_DIMENSIONS } from "@/constants.ts";
 import { CollisionProvider } from "@/providers/CollisionProvider.tsx";
 import { CrosshairProvider } from "@/providers/CrosshairProvider.tsx";
 import { DebugProvider } from "@/providers/DebugProvider.tsx";
-import { TMDBMovieData, tmdbApi } from "@/services/tmdbApi.ts";
+import { fetchAllMovies } from "@/services/tmdbApi.ts";
 import { getAssetUrl } from "@/utils/asset.ts";
-import { getImageUrl } from "@/utils/image.ts";
 
-export type MovieData = {
-  id: number;
-  title: string;
-  description: string;
-  cover?: string;
-  price: number;
-};
+const moviesBySection = await fetchAllMovies();
 
-const popular = await Promise.all([
-  tmdbApi.getPopularMovies(""),
-  tmdbApi.getPopularMovies("page=2"),
-]);
-
-const cage = await tmdbApi.getCageMovieCredits();
-
-const twilight = await tmdbApi.getMoviesByCollection(33514);
-const trending = await Promise.all([
-  tmdbApi.getTrendingMovies("page=1"),
-  tmdbApi.getTrendingMovies("page=2"),
-  tmdbApi.getTrendingMovies("page=3"),
-]);
-
-const cageMovies = cage.cast.map(
-  (movie: TMDBMovieData, movieIndex: number) => ({
-    id: `cage-${movieIndex}`,
-    title: movie.title,
-    description: movie.overview,
-    cover: getImageUrl(movie.poster_path, "poster", "medium"),
-    price: "Priceless",
-  }),
-);
-
-const twilightMovies = twilight.parts.map(
-  (movie: TMDBMovieData, movieIndex: number) => ({
-    id: `twilight-${movieIndex}`,
-    title: movie.title,
-    description: movie.overview,
-    cover: getImageUrl(movie.poster_path, "poster", "medium"),
-    price: "Where you been, loca?",
-  }),
-);
-
-const trendingMovies = trending.map((response) =>
-  response.results.map((movie: TMDBMovieData, movieIndex: number) => ({
-    id: `trending-${movieIndex}`,
-    title: movie.title,
-    description: movie.overview,
-    cover: getImageUrl(movie.poster_path, "poster", "medium") ?? "",
-    price: 9.99,
-  })),
-);
-
-const movies = popular.map((response, responseIndex: number) =>
-  response.results.map((movie: TMDBMovieData, movieIndex: number) => ({
-    id: `popular-${responseIndex}-${movieIndex}`,
-    title: movie.title,
-    description: movie.overview,
-    cover: getImageUrl(movie.poster_path, "poster", "medium") ?? "",
-    price: 9.99,
-  })),
-);
-
-movies.push(cageMovies);
-movies.push(twilightMovies);
-movies.push(trendingMovies.flat());
 export default function App() {
-  const [selectedVideo, setSelectedVideo] = useState<MovieData | null>(null);
+  const [selectedVideo, setSelectedVideo] = useState<MovieResult | null>(null);
 
-  const handleVideoClick = (movieData: MovieData) => {
+  const handleVideoClick = (movieData: MovieResult) => {
     setSelectedVideo(movieData);
   };
 
@@ -120,7 +57,7 @@ export default function App() {
               <StoreScene
                 onVideoClick={handleVideoClick}
                 disableControls={!!selectedVideo}
-                movies={movies}
+                moviesBySection={moviesBySection}
               />
             </CrosshairProvider>
           </CollisionProvider>

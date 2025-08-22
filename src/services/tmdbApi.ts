@@ -1,47 +1,44 @@
-const ACCESS_TOKEN = import.meta.env.VITE_TMDB_ACCESS_TOKEN;
-const BASE_URL = import.meta.env.VITE_TMDB_BASE_URL;
+import {
+  MovieDb,
+  MovieResult,
+  PopularMoviesRequest,
+  TrendingRequest,
+} from "moviedb-promise";
+import { MoviesBySection } from "@/components/store/StoreScene.tsx";
 
-export type TMDBMovieData = {
-  title: string;
-  overview: string;
-  poster_path: string;
-};
+const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
+const moviedb = new MovieDb(API_KEY);
 
-const apiOptions = {
-  method: "GET",
-  headers: {
-    accept: "application/json",
-    Authorization: `Bearer ${ACCESS_TOKEN}`,
-  },
-};
+export async function fetchAllMovies(): Promise<MoviesBySection> {
+  return {
+    popular: await Promise.all([
+      getPopularMovies(),
+      getPopularMovies({ page: 2 }),
+    ]).then((responses) => responses.flat()),
+    cage: await getPersonMovieCredits(2963).then((response) => response.cast),
+    twilight: await getCollectionInfo(33514).then((response) => response.parts),
+    trending: await Promise.all([
+      getTrendingMovies({ media_type: "movie", time_window: "day" }),
+    ]).then((responses) => responses.flat()),
+  };
+}
 
-export const tmdbApi = {
-  getCageMovieCredits: async () => {
-    const response = await fetch(
-      `${BASE_URL}/person/2963/movie_credits`,
-      apiOptions,
+export async function getPopularMovies(params?: PopularMoviesRequest) {
+  return moviedb.moviePopular(params).then((response) => response.results);
+}
+
+export async function getPersonMovieCredits(personId: number) {
+  return moviedb.personMovieCredits(personId);
+}
+
+export async function getTrendingMovies(params: TrendingRequest) {
+  return moviedb
+    .trending({ ...params, media_type: "movie" })
+    .then((response) =>
+      response.results?.filter((movie): movie is MovieResult => !!movie),
     );
-    return response.json();
-  },
-  getPopularMovies: async (queryString: string) => {
-    const response = await fetch(
-      `${BASE_URL}/movie/popular?${queryString}`,
-      apiOptions,
-    );
-    return response.json();
-  },
-  getTrendingMovies: async (queryString: string) => {
-    const response = await fetch(
-      `${BASE_URL}/trending/movie/day?${queryString}`,
-      apiOptions,
-    );
-    return response.json();
-  },
-  getMoviesByCollection: async (collectionId: number) => {
-    const response = await fetch(
-      `${BASE_URL}/collection/${collectionId}`,
-      apiOptions,
-    );
-    return response.json();
-  },
-};
+}
+
+export async function getCollectionInfo(collectionId: number) {
+  return moviedb.collectionInfo(collectionId);
+}

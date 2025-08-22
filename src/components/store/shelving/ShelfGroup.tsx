@@ -1,12 +1,12 @@
-import { MovieData } from "@/App.tsx";
+import { MovieResult } from "moviedb-promise";
 import { SimpleShelf } from "@/components/store/shelving/SimpleShelf.tsx";
 import { SHELF_DIMENSIONS } from "@/constants.ts";
 
 type ShelfGroupProps = {
   position: [number, number, number];
   rotation?: [number, number, number];
-  onVideoClick: (movie: MovieData) => void;
-  movies: MovieData[];
+  onVideoClick: (movie: MovieResult) => void;
+  movies: (MovieResult | undefined)[];
   signText?: string;
 };
 

@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Text } from "@react-three/drei";
 import { useFrame, useLoader, useThree } from "@react-three/fiber";
+import { MovieResult } from "moviedb-promise";
 import {
   Color,
   Mesh,
@@ -8,17 +9,17 @@ import {
   TextureLoader,
   Vector3,
 } from "three";
-import { MovieData } from "@/App.tsx";
 import { MAX_INTERACTION_DISTANCE, VIDEO_DIMENSIONS } from "@/constants.ts";
 import { useCrosshair } from "@/hooks/useCrosshair.ts";
 import { useDebug } from "@/hooks/useDebug.ts";
 import { getAssetUrl } from "@/utils/asset.ts";
+import { getImageUrl } from "@/utils/image.ts";
 
 // Import the hook
 type VideoProps = {
   position: [x: number, y: number, z: number];
-  movieData: MovieData;
-  onVideoClick: (movie: MovieData) => void;
+  movieData: MovieResult;
+  onVideoClick: (movie: MovieResult) => void;
 };
 
 export function Video({
@@ -31,10 +32,11 @@ export function Video({
   const meshRef = useRef<Mesh>(null);
   const [isWithinDistance, setIsWithinDistance] = useState(false);
   const { debugMode } = useDebug();
+  const cover = getImageUrl(movieData.poster_path, "poster", "medium");
 
   const texturePath =
-    movieData.cover && movieData.cover != ""
-      ? movieData.cover
+    cover && cover != ""
+      ? cover
       : getAssetUrl("/assets/textures/videoplaceholder.jpg");
   const texture = useLoader(TextureLoader, texturePath);
   const { hoveredObject, registerObject, unregisterObject } = useCrosshair();
@@ -148,7 +150,7 @@ export function Video({
             textAlign="center"
             anchorY="top"
           >
-            Cover URL: {movieData.cover}
+            Cover URL: {cover}
           </Text>
         </group>
       )}
