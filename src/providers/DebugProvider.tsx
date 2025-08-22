@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { DebugContext as DebugContext1 } from "@/contexts/DebugContext.ts";
+import { DebugContext } from "@/contexts/DebugContext.ts";
 
 export function DebugProvider({ children }: { children: React.ReactNode }) {
   const [debugMode, setDebugMode] = useState(false);
@@ -17,8 +17,6 @@ export function DebugProvider({ children }: { children: React.ReactNode }) {
   }, [debugMode]);
 
   return (
-    <DebugContext1 value={{ debugMode, setDebugMode }}>
-      {children}
-    </DebugContext1>
+    <DebugContext value={{ debugMode, setDebugMode }}>{children}</DebugContext>
   );
 }

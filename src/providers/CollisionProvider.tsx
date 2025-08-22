@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
 import { Box3 } from "three";
-import { CollisionContext as CollisionContext1 } from "@/contexts/CollisionContext.ts";
+import { CollisionContext } from "@/contexts/CollisionContext.ts";
 import { CollisionDebugRenderer } from "@/debug/CollisionDebugRenderer.tsx";
 import { useDebug } from "@/hooks/useDebug.ts";
 
@@ -50,7 +50,7 @@ export function CollisionProvider({ children }: { children: React.ReactNode }) {
   }, [boundingBoxes]);
 
   return (
-    <CollisionContext1
+    <CollisionContext
       value={{
         addBoundingBox,
         removeBoundingBox,
@@ -62,6 +62,6 @@ export function CollisionProvider({ children }: { children: React.ReactNode }) {
     >
       {children}
       {debugMode && <CollisionDebugRenderer />}
-    </CollisionContext1>
+    </CollisionContext>
   );
 }

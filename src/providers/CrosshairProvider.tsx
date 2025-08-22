@@ -2,7 +2,7 @@ import * as React from "react";
 import { useRef, useState } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { Object3D, Vector2 } from "three";
-import { CrosshairContext as CrosshairContext1 } from "@/contexts/CrosshairContext.ts";
+import { CrosshairContext } from "@/contexts/CrosshairContext.ts";
 
 export function CrosshairProvider({ children }: { children: React.ReactNode }) {
   const { camera, raycaster } = useThree();
@@ -35,10 +35,10 @@ export function CrosshairProvider({ children }: { children: React.ReactNode }) {
   });
 
   return (
-    <CrosshairContext1
+    <CrosshairContext
       value={{ hoveredObject, registerObject, unregisterObject }}
     >
       {children}
-    </CrosshairContext1>
+    </CrosshairContext>
   );
 }
