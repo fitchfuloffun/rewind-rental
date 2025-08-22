@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { Suspense, useEffect, useRef } from "react";
 import { Text } from "@react-three/drei";
 import { MovieResult } from "moviedb-promise";
 import { Object3D } from "three";
@@ -81,12 +81,16 @@ export function SimpleShelf({
           videos.map((video, index) => {
             if (!video) return null;
             return (
-              <Video
-                key={`video-${video.title}`}
-                position={VIDEO_SLOTS[index]}
-                movieData={video}
-                onVideoClick={onVideoClick}
-              />
+              <Suspense
+                key={`video-${video.id}`}
+                fallback={<VideoPlaceholder position={VIDEO_SLOTS[index]} />}
+              >
+                <Video
+                  position={VIDEO_SLOTS[index]}
+                  movieData={video}
+                  onVideoClick={onVideoClick}
+                />
+              </Suspense>
             );
           })}
         {debugMode &&
