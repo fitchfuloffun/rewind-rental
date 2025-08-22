@@ -12,9 +12,10 @@ import {
   Vector3,
   VideoTexture,
 } from "three";
-import { MAX_INTERACTION_DISTANCE } from "@/constants.ts";
-import { useCrosshair } from "@/hooks/useCrosshair.ts";
-import { getAssetUrl } from "@/utils/asset.ts";
+import { PositionalAudioHelper } from "three/addons/helpers/PositionalAudioHelper.js";
+import { useCrosshair } from "@/hooks/useCrosshair";
+import { useDebug } from "@/hooks/useDebug";
+import { getAssetUrl } from "@/utils/asset";
 
 type TVProps = {
   position?: [number, number, number];
@@ -34,6 +35,7 @@ export function TV({
   const { camera } = useThree();
   const videoRef = useRef<HTMLVideoElement>(null);
   const audioRef = useRef<PositionalAudio>(null);
+  const audioHelperRef = useRef<PositionalAudioHelper>(null);
   const screenRef = useRef<Mesh>(null);
   const meshRef = useRef<Mesh>(null);
   const [hasInteracted, setHasInteracted] = useState(false);
@@ -42,7 +44,9 @@ export function TV({
   const [isWithinDistance, setIsWithinDistance] = useState(false);
   const muteTexture = useTexture(getAssetUrl("/assets/textures/mute.png"));
   const { hoveredObject, registerObject, unregisterObject } = useCrosshair();
+  const { debugMode } = useDebug();
 
+  const maxInteractionDistance = 5; // Adjust this value as needed
   const hovered = hoveredObject === meshRef.current && isWithinDistance;
 
   // Check distance on each frame
@@ -50,7 +54,7 @@ export function TV({
     if (meshRef.current) {
       const tvPosition = meshRef.current.getWorldPosition(new Vector3());
       const distance = tvPosition.distanceTo(camera.position);
-      const withinDistance = distance <= MAX_INTERACTION_DISTANCE;
+      const withinDistance = distance <= maxInteractionDistance;
 
       if (withinDistance !== isWithinDistance) {
         setIsWithinDistance(withinDistance);
@@ -176,6 +180,13 @@ export function TV({
       screenRef.current.add(sound);
       audioRef.current = sound;
 
+      // Create and add positional audio helper only in debug mode
+      if (debugMode) {
+        const helper = new PositionalAudioHelper(sound, 5); // 5 is the range/sphere size
+        sound.add(helper);
+        audioHelperRef.current = helper;
+      }
+
       video
         .play()
         .then(() => {
@@ -206,6 +217,10 @@ export function TV({
         screenRefCurrent?.remove(audioRef.current);
         audioRef.current = null;
       }
+      if (audioHelperRef.current) {
+        audioHelperRef.current.dispose();
+        audioHelperRef.current = null;
+      }
       if (screenRefCurrent) {
         const material = screenRefCurrent.material as MeshStandardMaterial;
         material.map?.dispose();
@@ -226,6 +241,25 @@ export function TV({
       audioRef.current.setVolume(isMuted ? 0 : volume);
     }
   }, [isMuted, volume]);
+
+  // Separate effect to handle audio helper based on debug mode
+  useEffect(() => {
+    if (!audioRef.current) return;
+
+    if (debugMode && !audioHelperRef.current) {
+      // Create helper when debug mode is enabled and audio exists
+      const helper = new PositionalAudioHelper(audioRef.current, 5);
+      audioRef.current.add(helper);
+      audioHelperRef.current = helper;
+    } else if (!debugMode && audioHelperRef.current) {
+      // Remove helper when debug mode is disabled
+      audioHelperRef.current.dispose();
+      if (audioRef.current) {
+        audioRef.current.remove(audioHelperRef.current);
+      }
+      audioHelperRef.current = null;
+    }
+  }, [debugMode]);
 
   return (
     <group position={position} rotation={rotation}>
