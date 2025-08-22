@@ -17,7 +17,7 @@ export const IMAGE_SIZES = {
 };
 
 export const getImageUrl = (
-  imagePath?: string,
+  imagePath?: string | null,
   type: "poster" | "backdrop" = "poster",
   size: "small" | "medium" | "large" | "original" = "medium",
 ) => {
