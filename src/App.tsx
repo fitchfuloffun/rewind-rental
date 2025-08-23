@@ -22,6 +22,14 @@ export default function App() {
 
   const closeMenu = () => {
     setSelectedVideo(null);
+
+    // Re-request pointer lock after a small delay
+    setTimeout(() => {
+      const canvas = document.querySelector("canvas");
+      if (canvas) {
+        canvas.requestPointerLock();
+      }
+    }, 100);
   };
 
   return (
