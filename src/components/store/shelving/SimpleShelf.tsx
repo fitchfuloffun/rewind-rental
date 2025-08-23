@@ -1,6 +1,6 @@
 import { Suspense, useEffect, useRef } from "react";
 import { Text } from "@react-three/drei";
-import { Object3D } from "three";
+import { Group } from "three";
 import { MovieData } from "@/components/store/StoreScene.tsx";
 import { Video } from "@/components/video/Video.tsx";
 import { VideoPlaceholder } from "@/components/video/VideoPlaceholder.tsx";
@@ -30,7 +30,7 @@ export function SimpleShelf({
   const { debugMode } = useDebug();
   const { WIDTH, HEIGHT, DEPTH, HALF_HEIGHT, VIDEO_SLOTS } = SHELF_DIMENSIONS;
   const shelfId = `${idPrefix}shelf-${position.join("-")}`;
-  const meshRef = useRef<Object3D | null>(null);
+  const meshRef = useRef<Group | null>(null);
   const { updateCollisionBox } = useCollisionMesh(meshRef, shelfId);
 
   // Update collision box when position changes
@@ -81,17 +81,13 @@ export function SimpleShelf({
           videos.map((video, index) => {
             if (!video) return null;
             return (
-              <Suspense
+              <Video
                 key={`video-${video.id}`}
-                fallback={<VideoPlaceholder position={VIDEO_SLOTS[index]} />}
-              >
-                <Video
-                  position={VIDEO_SLOTS[index]}
-                  movieData={video}
-                  onVideoClick={onVideoClick}
-                  idPrefix={idPrefix}
-                />
-              </Suspense>
+                position={VIDEO_SLOTS[index]}
+                movieData={video}
+                onVideoClick={onVideoClick}
+                idPrefix={idPrefix}
+              />
             );
           })}
         {debugMode &&

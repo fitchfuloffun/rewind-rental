@@ -33,9 +33,9 @@ export function TV({
   defaultMuted,
 }: TVProps) {
   const { camera } = useThree();
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const audioRef = useRef<PositionalAudio>(null);
-  const audioHelperRef = useRef<PositionalAudioHelper>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const audioRef = useRef<PositionalAudio | null>(null);
+  const audioHelperRef = useRef<PositionalAudioHelper | null>(null);
   const screenRef = useRef<Mesh>(null);
   const meshRef = useRef<Mesh>(null);
   const [hasInteracted, setHasInteracted] = useState(false);

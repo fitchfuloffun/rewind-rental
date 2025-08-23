@@ -35,10 +35,10 @@ export function CrosshairProvider({ children }: { children: React.ReactNode }) {
   });
 
   return (
-    <CrosshairContext
+    <CrosshairContext.Provider
       value={{ hoveredObject, registerObject, unregisterObject }}
     >
       {children}
-    </CrosshairContext>
+    </CrosshairContext.Provider>
   );
 }

@@ -17,6 +17,8 @@ export function DebugProvider({ children }: { children: React.ReactNode }) {
   }, [debugMode]);
 
   return (
-    <DebugContext value={{ debugMode, setDebugMode }}>{children}</DebugContext>
+    <DebugContext.Provider value={{ debugMode, setDebugMode }}>
+      {children}
+    </DebugContext.Provider>
   );
 }

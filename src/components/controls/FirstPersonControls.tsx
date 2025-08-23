@@ -25,11 +25,9 @@ export function FirstPersonControls({
     // Release pointer lock when disabled
     if (disabled && document.pointerLockElement) {
       document.exitPointerLock();
-    } else if (!disabled && !document.pointerLockElement) {
-      // Re-lock when menu closes (optional - or let user click to re-engage)
-      gl.domElement.requestPointerLock();
     }
-  }, [disabled, gl.domElement]);
+    // Don't auto-request pointer lock - let user click to engage
+  }, [disabled]);
 
   useEffect(() => {
     if (disabled) return; // Don't add listeners if disabled
@@ -65,8 +63,21 @@ export function FirstPersonControls({
     };
 
     const handleClick = () => {
+      if (disabled) return; // Don't allow pointer lock when disabled
+
+      // Check if canvas is properly attached to document
+      if (
+        !gl.domElement.isConnected ||
+        !document.body.contains(gl.domElement)
+      ) {
+        console.warn("Canvas not properly attached to document");
+        return;
+      }
+
       if (document.pointerLockElement !== gl.domElement) {
-        gl.domElement.requestPointerLock();
+        gl.domElement.requestPointerLock().catch((error) => {
+          console.warn("Pointer lock request failed:", error);
+        });
       }
     };
 
@@ -79,10 +90,16 @@ export function FirstPersonControls({
       }
     };
 
+    const handlePointerLockError = (event: Event) => {
+      console.warn("Pointer lock error:", event);
+      isPointerLocked.current = false;
+    };
+
     document.addEventListener("keydown", handleKeyDown);
     document.addEventListener("keyup", handleKeyUp);
     document.addEventListener("mousemove", handleMouseMove);
     document.addEventListener("pointerlockchange", handlePointerLockChange);
+    document.addEventListener("pointerlockerror", handlePointerLockError);
     gl.domElement.addEventListener("click", handleClick);
 
     return () => {
@@ -93,6 +110,7 @@ export function FirstPersonControls({
         "pointerlockchange",
         handlePointerLockChange,
       );
+      document.removeEventListener("pointerlockerror", handlePointerLockError);
       gl.domElement.removeEventListener("click", handleClick);
     };
   }, [gl.domElement, disabled]);

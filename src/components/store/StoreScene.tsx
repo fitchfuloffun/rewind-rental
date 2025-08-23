@@ -1,4 +1,5 @@
 import { MovieResult } from "moviedb-promise";
+import { SkyBox } from "@/components/store/Skybox.tsx";
 import { StoreShelves } from "@/components/store/shelving/StoreShelves.tsx";
 import { FirstPersonControls } from "../controls/FirstPersonControls.tsx";
 import { Lighting } from "./lighting/Lighting.tsx";
@@ -31,6 +32,8 @@ export function StoreScene({
 }: StoreSceneProps) {
   return (
     <>
+      <SkyBox />
+
       <FirstPersonControls disabled={disableControls} />
 
       <Lighting />

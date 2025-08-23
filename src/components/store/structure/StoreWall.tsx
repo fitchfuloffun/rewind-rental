@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { useLoader } from "@react-three/fiber";
-import { Object3D, RepeatWrapping, TextureLoader } from "three";
+import { Group, RepeatWrapping, TextureLoader } from "three";
 import { useCollisionMesh } from "@/hooks/useCollisionMesh.ts";
 import { getAssetUrl } from "@/utils/asset.ts";
 
@@ -30,7 +30,7 @@ export function StoreWall({
     texture.needsUpdate = true;
   }, [texture, tilesX, tilesY]);
   const wallId = `wall-${position.join("-")}`;
-  const meshRef = useRef<Object3D | null>(null);
+  const meshRef = useRef<Group | null>(null);
 
   const { updateCollisionBox } = useCollisionMesh(meshRef, wallId);
 

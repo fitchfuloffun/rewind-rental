@@ -50,7 +50,7 @@ export function CollisionProvider({ children }: { children: React.ReactNode }) {
   }, [boundingBoxes]);
 
   return (
-    <CollisionContext
+    <CollisionContext.Provider
       value={{
         addBoundingBox,
         removeBoundingBox,
@@ -62,6 +62,6 @@ export function CollisionProvider({ children }: { children: React.ReactNode }) {
     >
       {children}
       {debugMode && <CollisionDebugRenderer />}
-    </CollisionContext>
+    </CollisionContext.Provider>
   );
 }

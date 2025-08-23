@@ -15,7 +15,6 @@ import { useDebug } from "@/hooks/useDebug.ts";
 import { getAssetUrl } from "@/utils/asset.ts";
 import { getImageUrl } from "@/utils/image.ts";
 
-// Import the hook
 type VideoProps = {
   position: [x: number, y: number, z: number];
   movieData: MovieData;
