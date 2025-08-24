@@ -82,6 +82,7 @@ export default [
             "transparent",
             "opacity",
             "wireframe",
+            "visible",
           ],
         },
       ],
