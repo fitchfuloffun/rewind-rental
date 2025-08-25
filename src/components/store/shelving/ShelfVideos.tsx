@@ -106,8 +106,6 @@ export function InstancedShelfVideos({
         url = getImageUrl(video.movieData.poster_path, "poster", "medium");
       } else {
         url = getAssetUrl("/assets/textures/videoplaceholder.jpg");
-        console.log("Missing poster for video", video);
-        console.log(url);
       }
 
       if (url && !urls.includes(url)) {

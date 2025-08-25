@@ -37,9 +37,6 @@ export function StoreCounter({
       }
     }
   });
-  useEffect(() => {
-    console.log(hoveredObject);
-  }, [hoveredObject]);
 
   useEffect(() => {
     if (counterEntranceRef.current) {
