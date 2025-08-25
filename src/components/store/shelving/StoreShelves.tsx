@@ -87,17 +87,17 @@ export function StoreShelves({
     },
     History: {
       position: [
-        -STORE_DIMENSIONS.HALF_WIDTH + SHELF_DIMENSIONS.DEPTH + 8,
+        -STORE_DIMENSIONS.HALF_WIDTH + SHELF_DIMENSIONS.DEPTH + 14,
         1.5,
-        STORE_DIMENSIONS.HALF_DEPTH - SHELF_DIMENSIONS.WIDTH * 6,
+        STORE_DIMENSIONS.HALF_DEPTH - SHELF_DIMENSIONS.WIDTH * 2,
       ],
-      rotation: [0, Math.PI / 2, 0],
+      rotation: [0, -Math.PI / 2, 0],
     },
     Horror: {
       position: [
         -STORE_DIMENSIONS.HALF_WIDTH + SHELF_DIMENSIONS.DEPTH + 14,
         1.5,
-        STORE_DIMENSIONS.HALF_DEPTH - SHELF_DIMENSIONS.WIDTH * 2,
+        STORE_DIMENSIONS.HALF_DEPTH - SHELF_DIMENSIONS.WIDTH * 4,
       ],
       rotation: [0, -Math.PI / 2, 0],
     },
@@ -105,23 +105,23 @@ export function StoreShelves({
       position: [
         -STORE_DIMENSIONS.HALF_WIDTH + SHELF_DIMENSIONS.DEPTH + 14,
         1.5,
-        STORE_DIMENSIONS.HALF_DEPTH - SHELF_DIMENSIONS.WIDTH * 4,
+        STORE_DIMENSIONS.HALF_DEPTH - SHELF_DIMENSIONS.WIDTH * 6,
       ],
       rotation: [0, -Math.PI / 2, 0],
     },
     Mystery: {
       position: [
-        -STORE_DIMENSIONS.HALF_WIDTH + SHELF_DIMENSIONS.DEPTH + 14,
+        STORE_DIMENSIONS.HALF_WIDTH - SHELF_DIMENSIONS.DEPTH - 14,
         1.5,
-        STORE_DIMENSIONS.HALF_DEPTH - SHELF_DIMENSIONS.WIDTH * 6,
+        STORE_DIMENSIONS.HALF_DEPTH - SHELF_DIMENSIONS.WIDTH * 2,
       ],
-      rotation: [0, -Math.PI / 2, 0],
+      rotation: [0, Math.PI / 2, 0],
     },
     Romance: {
       position: [
         STORE_DIMENSIONS.HALF_WIDTH - SHELF_DIMENSIONS.DEPTH - 14,
         1.5,
-        STORE_DIMENSIONS.HALF_DEPTH - SHELF_DIMENSIONS.WIDTH * 2,
+        STORE_DIMENSIONS.HALF_DEPTH - SHELF_DIMENSIONS.WIDTH * 4,
       ],
       rotation: [0, Math.PI / 2, 0],
     },
@@ -129,19 +129,11 @@ export function StoreShelves({
       position: [
         STORE_DIMENSIONS.HALF_WIDTH - SHELF_DIMENSIONS.DEPTH - 14,
         1.5,
-        STORE_DIMENSIONS.HALF_DEPTH - SHELF_DIMENSIONS.WIDTH * 4,
-      ],
-      rotation: [0, Math.PI / 2, 0],
-    },
-    "TV Movie": {
-      position: [
-        STORE_DIMENSIONS.HALF_WIDTH - SHELF_DIMENSIONS.DEPTH - 14,
-        1.5,
         STORE_DIMENSIONS.HALF_DEPTH - SHELF_DIMENSIONS.WIDTH * 6,
       ],
       rotation: [0, Math.PI / 2, 0],
     },
-    Thriller: {
+    "TV Movie": {
       position: [
         STORE_DIMENSIONS.HALF_WIDTH - SHELF_DIMENSIONS.DEPTH - 8,
         1.5,
@@ -149,7 +141,7 @@ export function StoreShelves({
       ],
       rotation: [0, -Math.PI / 2, 0],
     },
-    War: {
+    Thriller: {
       position: [
         STORE_DIMENSIONS.HALF_WIDTH - SHELF_DIMENSIONS.DEPTH - 8,
         1.5,
@@ -157,13 +149,21 @@ export function StoreShelves({
       ],
       rotation: [0, -Math.PI / 2, 0],
     },
-    Western: {
+    War: {
       position: [
         STORE_DIMENSIONS.HALF_WIDTH - SHELF_DIMENSIONS.DEPTH - 8,
         1.5,
         STORE_DIMENSIONS.HALF_DEPTH - SHELF_DIMENSIONS.WIDTH * 6,
       ],
       rotation: [0, -Math.PI / 2, 0],
+    },
+    Western: {
+      position: [
+        STORE_DIMENSIONS.HALF_WIDTH - SHELF_DIMENSIONS.DEPTH - 6,
+        1.5,
+        STORE_DIMENSIONS.HALF_DEPTH - SHELF_DIMENSIONS.WIDTH * 2,
+      ],
+      rotation: [0, Math.PI / 2, 0],
     },
   };
 
