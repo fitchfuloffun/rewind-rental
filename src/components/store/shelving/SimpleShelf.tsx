@@ -12,8 +12,7 @@ import {
   Vector3,
 } from "three";
 import { MovieData } from "@/components/store/StoreScene.tsx";
-import { Video } from "@/components/video/Video.tsx";
-import { VideoPlaceholder } from "@/components/video/VideoPlaceholder.tsx";
+import { InstancedShelfVideos } from "@/components/store/shelving/ShelfVideos.tsx";
 import { SHELF_DIMENSIONS } from "@/constants.ts";
 import { useCollisionMesh } from "@/hooks/useCollisionMesh.ts";
 import { useDebug } from "@/hooks/useDebug.ts";
@@ -83,69 +82,69 @@ function ShelfText({
 }
 
 // Component for individual shelf videos (can't be instanced due to unique content)
-function ShelfVideos({
-  position,
-  rotation = [0, 0, 0],
-  videos,
-  onVideoClick,
-  idPrefix,
-}: {
-  position: [number, number, number];
-  rotation?: [number, number, number];
-  videos?: (MovieData | undefined)[];
-  onVideoClick: (movie: MovieData) => void;
-  idPrefix?: string;
-}) {
-  const { debugMode } = useDebug();
-  const { VIDEO_SLOTS } = SHELF_DIMENSIONS;
-
-  return (
-    <group position={position} rotation={rotation}>
-      <group rotation={[-0.2, 0, 0]}>
-        {!debugMode &&
-          videos &&
-          videos.map((video, index) => {
-            if (!video) return null;
-            return (
-              <Suspense
-                key={`video-${video.id}`}
-                fallback={<VideoPlaceholder position={VIDEO_SLOTS[index]} />}
-              >
-                <Video
-                  position={VIDEO_SLOTS[index]}
-                  movieData={video}
-                  onVideoClick={onVideoClick}
-                  idPrefix={idPrefix}
-                />
-              </Suspense>
-            );
-          })}
-
-        {debugMode &&
-          VIDEO_SLOTS.map((slot, index) => {
-            if (videos && videos[index]) {
-              const video = videos[index];
-              return (
-                <Video
-                  key={`video-${video.title}`}
-                  position={slot}
-                  movieData={video}
-                  onVideoClick={onVideoClick}
-                />
-              );
-            }
-
-            return (
-              <VideoPlaceholder
-                key={`video-placeholder-${slot.join("-")}`}
-                position={slot}
-              />
-            );
-          })}
-      </group>
-    </group>
-  );
-}
+// function ShelfVideos({
+//   position,
+//   rotation = [0, 0, 0],
+//   videos,
+//   onVideoClick,
+//   idPrefix,
+// }: {
+//   position: [number, number, number];
+//   rotation?: [number, number, number];
+//   videos?: (MovieData | undefined)[];
+//   onVideoClick: (movie: MovieData) => void;
+//   idPrefix?: string;
+// }) {
+//   const { debugMode } = useDebug();
+//   const { VIDEO_SLOTS } = SHELF_DIMENSIONS;
+//
+//   return (
+//     <group position={position} rotation={rotation}>
+//       <group rotation={[-0.2, 0, 0]}>
+//         {!debugMode &&
+//           videos &&
+//           videos.map((video, index) => {
+//             if (!video) return null;
+//             return (
+//               <Suspense
+//                 key={`video-${video.id}`}
+//                 fallback={<VideoPlaceholder position={VIDEO_SLOTS[index]} />}
+//               >
+//                 <Video
+//                   position={VIDEO_SLOTS[index]}
+//                   movieData={video}
+//                   onVideoClick={onVideoClick}
+//                   idPrefix={idPrefix}
+//                 />
+//               </Suspense>
+//             );
+//           })}
+//
+//         {debugMode &&
+//           VIDEO_SLOTS.map((slot, index) => {
+//             if (videos && videos[index]) {
+//               const video = videos[index];
+//               return (
+//                 <Video
+//                   key={`video-${video.title}`}
+//                   position={slot}
+//                   movieData={video}
+//                   onVideoClick={onVideoClick}
+//                 />
+//               );
+//             }
+//
+//             return (
+//               <VideoPlaceholder
+//                 key={`video-placeholder-${slot.join("-")}`}
+//                 position={slot}
+//               />
+//             );
+//           })}
+//       </group>
+//     </group>
+//   );
+// }
 
 // Component to handle collision detection for each shelf
 function CollisionBox({
@@ -215,6 +214,7 @@ export function InstancedShelfGroup({ shelves }: InstancedShelfGroupProps) {
   const ledge2Ref = useRef<InstancedMesh>(null);
   const ledge3Ref = useRef<InstancedMesh>(null);
   const ledge4Ref = useRef<InstancedMesh>(null);
+  const groupId = shelves.map((s) => s.position.join("-")).join("_");
 
   // Update instance matrices when shelves change
   useFrame(() => {
@@ -378,6 +378,8 @@ export function InstancedShelfGroup({ shelves }: InstancedShelfGroupProps) {
         <BoundingSphereHelper mesh={ledge1Ref.current} />
       )}
 
+      <InstancedShelfVideos shelves={shelves} groupId={groupId} />
+
       {/* Non-instanced content - unique per shelf */}
       {shelves.map((shelf, index) => (
         <group key={index}>
@@ -395,13 +397,13 @@ export function InstancedShelfGroup({ shelves }: InstancedShelfGroupProps) {
             width={WIDTH}
           />
 
-          <ShelfVideos
-            position={shelf.position}
-            rotation={shelf.rotation}
-            videos={shelf.videos}
-            onVideoClick={shelf.onVideoClick}
-            idPrefix={shelf.idPrefix}
-          />
+          {/*<OptimizedShelfVideos // <-- This line*/}
+          {/*  position={shelf.position}*/}
+          {/*  rotation={shelf.rotation}*/}
+          {/*  videos={shelf.videos}*/}
+          {/*  onVideoClick={shelf.onVideoClick}*/}
+          {/*  idPrefix={shelf.idPrefix}*/}
+          {/*/>*/}
         </group>
       ))}
     </>

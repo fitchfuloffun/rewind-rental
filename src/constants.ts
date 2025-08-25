@@ -82,3 +82,4 @@ export const SHELF_DIMENSIONS = {
 };
 
 export const MAX_INTERACTION_DISTANCE = 5;
+export const MAX_VIEW_DISTANCE = STORE_DIMENSIONS.DEPTH;

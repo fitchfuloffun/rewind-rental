@@ -176,7 +176,6 @@ export function StoreShelves({
         movies={moviesBySection.popular}
         signText="Popular Flicks"
       />
-
       {/* Movies by genre */}
       {Object.entries(moviesBySection.moviesByGenre).map(([genre, movies]) => (
         <ShelfGroup
@@ -188,7 +187,6 @@ export function StoreShelves({
           signText={genre}
         />
       ))}
-
       {/* Nic Cage aisle */}
       <ShelfGroup
         position={[-4, 1.5, 0]}
@@ -204,8 +202,7 @@ export function StoreShelves({
         movies={moviesBySection.cage?.slice(40, 80)}
         signText="Cage is all the rage"
       />
-
-      {/* Amy's Picks*/}
+      {/*Amy's Picks*/}
       <ShelfGroup
         position={[STORE_DIMENSIONS.HALF_WIDTH - 0.5, 1.5, 0]}
         rotation={[0, -Math.PI / 2, 0]}
@@ -213,7 +210,6 @@ export function StoreShelves({
         movies={moviesBySection.twilight}
         signText="Amy's Picks"
       />
-
       {/* Trending */}
       <ShelfGroup
         position={[

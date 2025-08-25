@@ -1,12 +1,20 @@
+// CrosshairProvider.tsx - Updated to handle instanced meshes
 import * as React from "react";
 import { useRef, useState } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
-import { Object3D, Vector2 } from "three";
+import { InstancedMesh, Object3D, Vector2 } from "three";
 import { CrosshairContext } from "@/contexts/CrosshairContext.ts";
+
+type HoveredTarget = {
+  object: Object3D;
+  instanceId?: number;
+};
 
 export function CrosshairProvider({ children }: { children: React.ReactNode }) {
   const { camera, raycaster } = useThree();
-  const [hoveredObject, setHoveredObject] = useState<Object3D | null>(null);
+  const [hoveredTarget, setHoveredTarget] = useState<HoveredTarget | null>(
+    null,
+  );
   const registeredObjects = useRef<Map<string, Object3D>>(new Map());
 
   const registerObject = (obj: Object3D, id: string) => {
@@ -17,7 +25,7 @@ export function CrosshairProvider({ children }: { children: React.ReactNode }) {
     registeredObjects.current.delete(id);
   };
 
-  // Single raycasting system for all objects
+  // Enhanced raycasting system that handles instanced meshes
   useFrame(() => {
     // Raycast from screen center
     raycaster.setFromCamera(new Vector2(0, 0), camera);
@@ -26,18 +34,63 @@ export function CrosshairProvider({ children }: { children: React.ReactNode }) {
     const objects = Array.from(registeredObjects.current.values());
     const intersects = raycaster.intersectObjects(objects, false);
 
-    // Set the closest object as hovered (or null if none)
-    const closest = intersects.length > 0 ? intersects[0].object : null;
+    if (intersects.length > 0) {
+      const intersection = intersects[0];
+      const object = intersection.object;
 
-    if (closest !== hoveredObject) {
-      setHoveredObject(closest);
+      // Check if this is an instanced mesh
+      if (
+        object instanceof InstancedMesh &&
+        intersection.instanceId !== undefined
+      ) {
+        const newTarget = {
+          object,
+          instanceId: intersection.instanceId,
+        };
+
+        // Only update if the target changed
+        if (
+          !hoveredTarget ||
+          hoveredTarget.object !== object ||
+          hoveredTarget.instanceId !== intersection.instanceId
+        ) {
+          setHoveredTarget(newTarget);
+        }
+      } else {
+        // Regular mesh
+        const newTarget = { object };
+
+        if (
+          !hoveredTarget ||
+          hoveredTarget.object !== object ||
+          hoveredTarget.instanceId !== undefined
+        ) {
+          setHoveredTarget(newTarget);
+        }
+      }
+    } else {
+      // No intersection
+      if (hoveredTarget !== null) {
+        setHoveredTarget(null);
+      }
     }
   });
 
+  // Provide both legacy and new APIs for backward compatibility
+  const contextValue = {
+    // Legacy API - for backward compatibility with existing Video components
+    hoveredObject: hoveredTarget?.object || null,
+
+    // New API - for instanced meshes
+    hoveredInstanceId: hoveredTarget?.instanceId || null,
+    hoveredTarget,
+
+    registerObject,
+    unregisterObject,
+  };
+
   return (
-    <CrosshairContext.Provider
-      value={{ hoveredObject, registerObject, unregisterObject }}
-    >
+    <CrosshairContext.Provider value={contextValue}>
       {children}
     </CrosshairContext.Provider>
   );
