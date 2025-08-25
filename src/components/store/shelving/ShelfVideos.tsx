@@ -17,6 +17,7 @@ import {
   VIDEO_DIMENSIONS,
 } from "@/constants.ts";
 import { useCrosshair } from "@/hooks/useCrosshair.ts";
+import { getAssetUrl } from "@/utils/asset.ts";
 import { getImageUrl } from "@/utils/image.ts";
 
 // Helper to create world matrix for video position
@@ -100,19 +101,24 @@ export function InstancedShelfVideos({
   const textureUrls = useMemo(() => {
     const urls: string[] = [];
     videosWithData.forEach((video) => {
+      let url = undefined;
       if (video.movieData?.poster_path) {
-        const url = getImageUrl(
-          video.movieData.poster_path,
-          "poster",
-          "medium",
-        );
-        if (url && !urls.includes(url)) {
-          urls.push(url);
-        }
+        url = getImageUrl(video.movieData.poster_path, "poster", "medium");
+      } else {
+        url = getAssetUrl("/assets/textures/videoplaceholder.jpg");
+        console.log("Missing poster for video", video);
+        console.log(url);
+      }
+
+      if (url && !urls.includes(url)) {
+        urls.push(url);
       }
     });
+
     // Always return at least one URL to keep hook calls consistent
-    return urls.length > 0 ? urls : ["/placeholder.jpg"];
+    return urls.length > 0
+      ? urls
+      : [getAssetUrl("/assets/textures/videoplaceholder.jpg")];
   }, [videosWithData]);
 
   const textures = useTexture(textureUrls, (loadedTextures) => {
@@ -129,9 +135,10 @@ export function InstancedShelfVideos({
 
   // Texture lookup function
   const getTexture = (video: (typeof videosWithData)[0]) => {
-    if (!video.movieData?.poster_path) return null;
-    const url = getImageUrl(video.movieData.poster_path, "poster", "medium");
-    if (!url) return null;
+    // if (!video.movieData?.poster_path) return null;
+    const url =
+      getImageUrl(video.movieData?.poster_path, "poster", "medium") ??
+      getAssetUrl("/assets/textures/videoplaceholder.jpg");
     const index = textureUrls.indexOf(url);
     if (index === -1) return null;
     return Array.isArray(textures) ? textures[index] : textures;
