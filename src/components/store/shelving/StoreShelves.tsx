@@ -213,11 +213,11 @@ export function StoreShelves({
       {/* Trending */}
       <ShelfGroup
         position={[
-          -8,
+          STORE_DIMENSIONS.HALF_WIDTH - 0.5,
           1.5,
-          -STORE_DIMENSIONS.HALF_DEPTH + SHELF_DIMENSIONS.DEPTH,
+          SHELF_DIMENSIONS.WIDTH,
         ]}
-        rotation={[0, 0, 0]}
+        rotation={[0, -Math.PI / 2, 0]}
         onVideoClick={onVideoClick}
         movies={moviesBySection.trending}
         signText="Trending"
