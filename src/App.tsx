@@ -35,19 +35,19 @@ export default function App() {
   return (
     <div style={{ width: "100vw", height: "100vh", background: "#000" }}>
       <Suspense fallback={<LoadingScreen />}>
-        <Canvas
-          camera={{
-            position: [0, 3, STORE_DIMENSIONS.HALF_DEPTH - 1],
-            fov: 75,
-          }}
-          gl={{
-            preserveDrawingBuffer: true,
-            powerPreference: "high-performance",
-            antialias: true,
-            alpha: false,
-          }}
-        >
-          <DebugProvider>
+        <DebugProvider>
+          <Canvas
+            camera={{
+              position: [0, 3, STORE_DIMENSIONS.HALF_DEPTH - 1],
+              fov: 75,
+            }}
+            gl={{
+              preserveDrawingBuffer: true,
+              powerPreference: "high-performance",
+              antialias: true,
+              alpha: false,
+            }}
+          >
             <CollisionProvider>
               <CrosshairProvider>
                 <StoreScene
@@ -57,8 +57,8 @@ export default function App() {
                 />
               </CrosshairProvider>
             </CollisionProvider>
-          </DebugProvider>
-        </Canvas>
+          </Canvas>
+        </DebugProvider>
 
         <Crosshair />
 

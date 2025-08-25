@@ -13,8 +13,10 @@ export function ControlsDisplay() {
     >
       <div>Click to enable mouse look</div>
       <div>WASD to move, Mouse to look around</div>
+      <div>Left click to interact</div>
       <div>Left Shift to sprint, Left Ctrl to toggle crouch</div>
       <div>B to switch on debug mode</div>
+      <div>P to show performance stats</div>
       <div>ESC to unlock mouse</div>
     </div>
   );

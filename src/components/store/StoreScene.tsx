@@ -1,6 +1,7 @@
 import { MovieResult } from "moviedb-promise";
 import { SkyBox } from "@/components/store/Skybox.tsx";
 import { StoreShelves } from "@/components/store/shelving/StoreShelves.tsx";
+import { PerformanceTracker } from "@/debug/PerformanceTracker.tsx";
 import { FirstPersonControls } from "../controls/FirstPersonControls.tsx";
 import { Lighting } from "./lighting/Lighting.tsx";
 import { StoreSign } from "./structure/StoreSign.tsx";
@@ -32,6 +33,7 @@ export function StoreScene({
 }: StoreSceneProps) {
   return (
     <>
+      <PerformanceTracker />
       <SkyBox />
 
       <FirstPersonControls disabled={disableControls} />
