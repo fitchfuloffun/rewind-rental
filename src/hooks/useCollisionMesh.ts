@@ -22,6 +22,21 @@ export function useCollisionMesh(
     }
   }, [id, addBoundingBox, removeBoundingBox, meshRef]);
 
+  const addCollisionBox = useCallback(
+    (meshRef: RefObject<Object3D | null>, id: string) => {
+      if (meshRef.current && id) {
+        const boundingBox = new Box3().setFromObject(meshRef.current);
+        boundingBoxRef.current = boundingBox;
+        addBoundingBox(id, boundingBox);
+
+        return () => {
+          removeBoundingBox(id);
+        };
+      }
+    },
+    [addBoundingBox, removeBoundingBox],
+  );
+
   const updateCollisionBox = useCallback(() => {
     if (meshRef.current && id && boundingBoxRef.current) {
       boundingBoxRef.current.setFromObject(meshRef.current);
@@ -29,5 +44,9 @@ export function useCollisionMesh(
     }
   }, [id, updateBoundingBox, meshRef]);
 
-  return { updateCollisionBox };
+  const removeCollisionBox = useCallback(() => {
+    removeBoundingBox(id);
+  }, [id, removeBoundingBox]);
+
+  return { addCollisionBox, updateCollisionBox, removeCollisionBox };
 }

@@ -1,7 +1,7 @@
 // constants/storeDimensions.js
 export const STORE_DIMENSIONS = {
   WIDTH: 40,
-  DEPTH: 26,
+  DEPTH: 30,
   HEIGHT: 6,
   WALL_THICKNESS: 0.1,
 

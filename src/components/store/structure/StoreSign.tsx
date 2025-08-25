@@ -1,9 +1,13 @@
 import { Text } from "@react-three/drei";
 import { STORE_DIMENSIONS } from "@/constants.ts";
 
-export function StoreSign() {
+export function StoreSign({
+  position = [0, 3.5, -STORE_DIMENSIONS.HALF_DEPTH],
+}: {
+  position?: [number, number, number];
+}) {
   return (
-    <group position={[0, 3.5, -STORE_DIMENSIONS.HALF_DEPTH]}>
+    <group position={position}>
       {/* Sign background */}
       <mesh>
         <boxGeometry args={[8, 1.5, 0.1]} />

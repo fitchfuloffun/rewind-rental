@@ -1,6 +1,7 @@
 import { MovieResult } from "moviedb-promise";
 import { SkyBox } from "@/components/store/Skybox.tsx";
 import { StoreShelves } from "@/components/store/shelving/StoreShelves.tsx";
+import { STORE_DIMENSIONS } from "@/constants.ts";
 import { PerformanceTracker } from "@/debug/PerformanceTracker.tsx";
 import { FirstPersonControls } from "../controls/FirstPersonControls.tsx";
 import { Lighting } from "./lighting/Lighting.tsx";
@@ -48,7 +49,7 @@ export function StoreScene({
       <StoreStructure />
 
       {/* Center display */}
-      <StoreSign />
+      <StoreSign position={[0, 4.5, -STORE_DIMENSIONS.HALF_DEPTH]} />
     </>
   );
 }

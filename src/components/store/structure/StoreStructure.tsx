@@ -1,4 +1,5 @@
 import { TV } from "@/components/store/TV.tsx";
+import { StoreCounter } from "@/components/store/structure/StoreCounter.tsx";
 import { StoreDoor } from "@/components/store/structure/StoreDoor.tsx";
 import { StoreFloor } from "@/components/store/structure/StoreFloor.tsx";
 import { StoreWall } from "@/components/store/structure/StoreWall.tsx";
@@ -42,6 +43,12 @@ export function StoreStructure() {
         rotation={[0, -Math.PI / 2, 0]}
       />
 
+      {/* Roof */}
+      <mesh rotation={[Math.PI / 2, 0, 0]} position={[0, HEIGHT, 0]}>
+        <planeGeometry args={[WIDTH, DEPTH]} />
+        <meshStandardMaterial color="#2a2a2a" />
+      </mesh>
+
       <TV
         position={[-HALF_WIDTH + 1, HEIGHT - 1, -HALF_DEPTH + 1]}
         rotation={[Math.PI / 4, Math.PI / 4, -Math.PI / 6]}
@@ -53,11 +60,7 @@ export function StoreStructure() {
         defaultMuted={true}
       />
 
-      {/* Roof */}
-      <mesh rotation={[Math.PI / 2, 0, 0]} position={[0, HEIGHT, 0]}>
-        <planeGeometry args={[WIDTH, DEPTH]} />
-        <meshStandardMaterial color="#2a2a2a" />
-      </mesh>
+      <StoreCounter position={[0, 0, -STORE_DIMENSIONS.HALF_DEPTH + 4]} />
     </group>
   );
 }

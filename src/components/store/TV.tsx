@@ -13,6 +13,7 @@ import {
   VideoTexture,
 } from "three";
 import { PositionalAudioHelper } from "three/addons/helpers/PositionalAudioHelper.js";
+import { MAX_INTERACTION_DISTANCE } from "@/constants.ts";
 import { useCrosshair } from "@/hooks/useCrosshair";
 import { useDebug } from "@/hooks/useDebug";
 import { getAssetUrl } from "@/utils/asset";
@@ -46,7 +47,6 @@ export function TV({
   const { hoveredObject, registerObject, unregisterObject } = useCrosshair();
   const { debugMode } = useDebug();
 
-  const maxInteractionDistance = 5; // Adjust this value as needed
   const hovered = hoveredObject === meshRef.current && isWithinDistance;
 
   // Check distance on each frame
@@ -54,7 +54,7 @@ export function TV({
     if (meshRef.current) {
       const tvPosition = meshRef.current.getWorldPosition(new Vector3());
       const distance = tvPosition.distanceTo(camera.position);
-      const withinDistance = distance <= maxInteractionDistance;
+      const withinDistance = distance <= MAX_INTERACTION_DISTANCE;
 
       if (withinDistance !== isWithinDistance) {
         setIsWithinDistance(withinDistance);
