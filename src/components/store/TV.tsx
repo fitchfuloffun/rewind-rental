@@ -232,7 +232,7 @@ export function TV({
       camera.remove(listener);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [playlist, currentVideoIndex, hasInteracted, volume, camera]);
+  }, [currentVideoIndex, hasInteracted, volume, camera]);
 
   // Separate effect to handle mute/unmute without restarting video
   useEffect(() => {
